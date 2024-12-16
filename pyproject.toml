@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "video-ai-platform"
+version = "0.1.0"
+description = "AI-powered video analysis and interaction platform"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.104.0"
+uvicorn = "^0.24.0"
+pydantic = "^2.5.2"
+pydantic-settings = "^2.1.0"
+celery = "^5.3.6"
+redis = "^5.0.1"
+SQLAlchemy = "^2.0.23"
+alembic = "^1.12.1"
+transformers = "^4.35.0"
+torch = "^2.1.0"
+accelerate = "^0.24.0"
+safetensors = "^0.4.0"
+einops = "^0.7.0"
+decord = "^0.6.0"
+opencv-python-headless = "^4.8.1.78"
+playwright = "^1.40.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+black = "^23.11.0"
+flake8 = "^6.1.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
