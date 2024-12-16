@@ -23,7 +23,8 @@ class Settings(BaseSettings):
     
     # Processing
     BATCH_SIZE: int = 32
-    MAX_VIDEO_LENGTH: int = 3600  # Maximum video length in seconds
+    USE_CUDA: bool = True
+    FP16: bool = True
     
     class Config:
         case_sensitive = True
