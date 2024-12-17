@@ -39,7 +39,7 @@ ENV/
 logs/
 
 # Model files
-models/
+trained_models/
 *.pt
 *.pth
 *.onnx
