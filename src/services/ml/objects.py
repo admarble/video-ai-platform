@@ -1,10 +1,44 @@
 import torch
-from typing import List, Dict
+from transformers import DetrImageProcessor, DetrForObjectDetection
+from typing import List, Dict, Optional, Tuple
+import numpy as np
+from dataclasses import dataclass
+import logging
+
+@dataclass
+class DetectedObject:
+    """Represents a detected object in a frame"""
+    label: str
+    confidence: float
+    box: Tuple[float, float, float, float]  # (x1, y1, x2, y2) normalized coordinates
+    frame_idx: int
+    track_id: Optional[int] = None
 
 class ObjectDetector:
-    def __init__(self, model_manager):
-        self.model = model_manager.get_model("object")
-        self.processor = model_manager.get_processor("object")
+    def __init__(
+        self,
+        model_manager,
+        model_name: str = "facebook/detr-resnet-50",
+        confidence_threshold: float = 0.7,
+        device: Optional[str] = None
+    ):
+        """Initialize DETR object detector."""
+        self.model_manager = model_manager
+        self.confidence_threshold = confidence_threshold
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        
+        # Initialize model and processor through model manager
+        self.processor = self.model_manager.load_processor(
+            model_name, 
+            DetrImageProcessor
+        )
+        self.model = self.model_manager.load_model(
+            model_name, 
+            DetrForObjectDetection
+        )
+        self.model.to(self.device)
+        
+        logging.info(f"Initialized DETR object detector on {self.device}")
 
     @torch.inference_mode()
     async def detect(self, frames) -> List[Dict]:

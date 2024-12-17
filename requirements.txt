@@ -10,6 +10,7 @@ cv2-headless>=4.8.0
 transformers>=4.30.0
 torch>=2.0.0
 decord>=0.6.0
+torchvision>=0.16.0
 
 # ML/DL Dependencies
 torch>=2.1.0

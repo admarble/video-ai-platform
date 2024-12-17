@@ -1,23 +1,34 @@
-from pydantic import BaseModel
-from typing import List, Dict, Optional
-from datetime import datetime
+from dataclasses import dataclass
+from typing import List, Dict, Optional, Tuple
 
-class VideoMetadata(BaseModel):
+@dataclass
+class DetectedObject:
+    """Represents a detected object in a frame"""
+    label: str
+    confidence: float
+    box: Tuple[float, float, float, float]  # (x1, y1, x2, y2) normalized coordinates
+    frame_idx: int
+    track_id: Optional[int] = None
+
+@dataclass
+class Scene:
+    """Represents a detected scene/segment in the video"""
+    start_frame: int
+    end_frame: int
+    label: str
+    confidence: float
+
+@dataclass
+class VideoMetadata:
+    """Video metadata information"""
     duration: float
     fps: float
-    total_frames: int
-    resolution: tuple[int, int]
+    frame_count: int
+    resolution: Tuple[int, int]  # (width, height)
 
-class SceneInfo(BaseModel):
-    timestamp: float
-    scenes: List[Dict[str, float]]  # label: confidence
-
-class ObjectInfo(BaseModel):
-    timestamp: float
-    detections: List[Dict]  # objects with boxes and scores
-
-class ProcessingResult(BaseModel):
+@dataclass
+class ProcessingResult:
+    """Combined results from video processing pipeline"""
+    scenes: List[Scene]
+    objects: List[DetectedObject]
     metadata: VideoMetadata
-    scenes: List[SceneInfo]
-    objects: List[ObjectInfo]
-    processed_at: datetime = datetime.utcnow()
