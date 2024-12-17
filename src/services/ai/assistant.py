@@ -1,6 +1,8 @@
 from transformers import CLIPProcessor, CLIPModel
 from src.models.domain.query import QueryResult
 import torch
+from typing import List
+import numpy as np
 
 class VideoQueryAssistant:
     def __init__(self, model_manager):
