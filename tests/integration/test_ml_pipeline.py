@@ -1,5 +1,6 @@
 import pytest
 from src.services.ml import SceneAnalyzer, ObjectDetector
+from src.services.video.processor import VideoProcessor
 
 @pytest.mark.asyncio
 async def test_parallel_processing():

@@ -1,50 +1,53 @@
-# Virtual Environment
-.venv/
-venv/
-env/
-
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-get-pip.py
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Environment variables
-.env
-.env.*
-!.env.example
+# Virtual Environment
+venv/
+env/
+ENV/
 
-# IDE settings
-.vscode/
+# IDE
 .idea/
+.vscode/
 *.swp
 *.swo
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Environment variables
+.env
 
-# Project specific
-video-ai-platform/frontend/node_modules/
-video-ai-platform/frontend/build/
-video-ai-platform/frontend/.next/
+# Logs
+*.log
+logs/
 
-# Keep these files/directories (they should be tracked)
-# video-ai-platform/.gitignore
-# video-ai-platform/Makefile
-# video-ai-platform/README.md
-# video-ai-platform/alembic/
-# video-ai-platform/docker/
-# video-ai-platform/frontend/
-# video-ai-platform/pyproject.toml
-# video-ai-platform/requirements-dev.txt
-# video-ai-platform/scripts/
-# video-ai-platform/src/
-# video-ai-platform/tests/
+# Model files
+models/
+*.pt
+*.pth
+*.onnx
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Cache
+.mypy_cache/
+.pytest_cache/
