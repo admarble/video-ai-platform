@@ -51,3 +51,10 @@ htmlcov/
 # Cache
 .mypy_cache/
 .pytest_cache/
+
+# Venv
+.venv/
+Miniconda3-latest-MacOSX-arm64.sh
+Miniforge3-MacOSX-arm64.sh
+get-pip.py
+~/
