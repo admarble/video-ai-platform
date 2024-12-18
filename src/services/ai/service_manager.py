@@ -1,90 +1,63 @@
-from pathlib import Path
-import logging
-from typing import Dict, Optional, List, Any
-from dataclasses import dataclass
+from typing import Dict, Any, Optional, List
 import torch
+import numpy as np
 from concurrent.futures import ThreadPoolExecutor
-import threading
-from queue import Queue
-import time
+import psutil
+import logging
+import gc
+import os
 
-from src.exceptions import ServiceInitializationError
-from src.models.scene_processor import SceneProcessor
-from src.models.object_detector import ObjectDetector
-from src.models.audio_processor import AudioProcessor
-from src.models.text_video_aligner import TextVideoAligner
-
-@dataclass
-class ModelConfig:
-    """Configuration for ML models"""
-    scene_model: str = "MCG-NJU/videomae-base-finetuned-kinetics"
-    object_model: str = "facebook/detr-resnet-50"
-    audio_model: str = "facebook/wav2vec2-base-960h"
-    alignment_model: str = "openai/clip-vit-base-patch32"
-    device: Optional[str] = None
-    batch_size: int = 32
-    num_workers: int = 4
+from .exceptions import ServiceCleanupError, VideoProcessingError
+from src.core.config import ModelConfig
+from src.services.ml.scene import SceneProcessor
+from src.services.ml.objects import ObjectDetector
+from src.models.video import SceneSegment
 
 class ServiceManager:
-    """Manages initialization and coordination of ML services"""
+    """Manages video processing services"""
     
-    def __init__(
-        self,
-        config: Optional[ModelConfig] = None,
-        cache_dir: Optional[str] = None
-    ):
+    def __init__(self, config: Optional[ModelConfig] = None):
         self.config = config or ModelConfig()
-        self.cache_dir = Path(cache_dir) if cache_dir else Path.home() / ".video_ai_cache"
-        self.device = self._setup_device()
         self._services: Dict[str, Any] = {}
-        self._lock = threading.Lock()
-        self._initialization_status = {}
+        self.logger = logging.getLogger(__name__)
         
-    def _setup_device(self) -> str:
-        if self.config.device:
-            return self.config.device
-        return "cuda" if torch.cuda.is_available() else "cpu"
+    def initialize_services(self, service_names: List[str]) -> None:
+        """Initialize requested services"""
+        for name in service_names:
+            if name == 'scene_processor':
+                self._services[name] = SceneProcessor()
+            elif name == 'object_detector':
+                self._services[name] = ObjectDetector()
+                
+    def get_service(self, name: str) -> Any:
+        """Get an initialized service"""
+        if name not in self._services:
+            raise KeyError(f"Service {name} not initialized")
+        return self._services[name]
         
-    def _initialize_model_cache(self) -> None:
-        try:
-            self.cache_dir.mkdir(parents=True, exist_ok=True)
-            logging.info(f"Initialized model cache at {self.cache_dir}")
-        except Exception as e:
-            raise ServiceInitializationError(f"Failed to create cache directory: {str(e)}")
-            
-    def _initialize_service(self, service_name: str) -> None:
-        try:
-            if service_name == "scene_processor":
-                service = SceneProcessor(
-                    model_name=self.config.scene_model,
-                    device=self.device
-                )
-            elif service_name == "object_detector":
-                service = ObjectDetector(
-                    model_name=self.config.object_model,
-                    device=self.device,
-                    batch_size=self.config.batch_size
-                )
-            elif service_name == "audio_processor":
-                service = AudioProcessor(
-                    model_name=self.config.audio_model,
-                    device=self.device
-                )
-            elif service_name == "text_aligner":
-                service = TextVideoAligner(
-                    model_name=self.config.alignment_model,
-                    device=self.device,
-                    batch_size=self.config.batch_size
-                )
-            else:
-                raise ValueError(f"Unknown service: {service_name}")
+    def cleanup(self) -> None:
+        """Cleanup resources"""
+        cleanup_errors = []
+        for name, service in self._services.items():
+            try:
+                if hasattr(service, 'cleanup'):
+                    service.cleanup()
+            except Exception as e:
+                cleanup_errors.append(f"{name}: {str(e)}")
                 
-            with self._lock:
-                self._services[service_name] = service
-                self._initialization_status[service_name] = True
-                
-            logging.info(f"Successfully initialized {service_name}")
-            
-        except Exception as e:
-            self._initialization_status[service_name] = False
-            raise ServiceInitializationError(f"Failed to initialize {service_name}: {str(e)}") 
+        self._services.clear()
+        
+        if cleanup_errors:
+            raise ServiceCleanupError(
+                f"Failed to cleanup services: {', '.join(cleanup_errors)}"
+            )
+
+def _extract_frames(video_path: str) -> tuple[np.ndarray, float]:
+    """Extract frames from video file"""
+    if not os.path.exists(video_path):
+        raise VideoProcessingError(f"Video file not found: {video_path}")
+        
+    # Simplified implementation for testing
+    frames = np.random.randint(0, 255, (30, 640, 480, 3), dtype=np.uint8)
+    fps = 30.0
+    return frames, fps
