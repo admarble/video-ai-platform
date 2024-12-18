@@ -7,6 +7,11 @@ import numpy as np
 import decord
 import gc
 import os
+from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
+import soundfile as sf
+import librosa
+from pathlib import Path
+import subprocess
 
 from src.core.model_loader import ModelManager
 from src.services.ml import SceneAnalyzer, ObjectDetector
@@ -20,6 +25,18 @@ class ProcessingConfig:
     num_workers: int = 4
     cache_dir: Optional[str] = None
     logging_level: str = "INFO"
+
+@dataclass
+class AudioSegment:
+    """Represents a processed audio segment with transcription"""
+    start_time: float
+    end_time: float
+    text: str
+    confidence: float
+
+class AudioProcessingError(Exception):
+    """Custom exception for audio processing errors"""
+    pass
 
 class VideoProcessor:
     def __init__(self, config: Optional[ProcessingConfig] = None):
@@ -169,3 +186,147 @@ class VideoProcessor:
             "batch_size": self.config.batch_size,
             "device": str(self.device)
         }
+
+class AudioProcessor:
+    def __init__(
+        self,
+        model_name: str = "facebook/wav2vec2-base-960h",
+        device: Optional[str] = None,
+        sample_rate: int = 16000
+    ):
+        """Initialize audio processor with Wav2Vec2 model."""
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.sample_rate = sample_rate
+        
+        # Initialize Wav2Vec2 model and processor
+        self.processor = Wav2Vec2Processor.from_pretrained(model_name)
+        self.model = Wav2Vec2ForCTC.from_pretrained(model_name)
+        self.model.to(self.device)
+        
+        logging.info(f"Initialized AudioProcessor with {model_name} on {self.device}")
+
+    def _extract_audio(self, video_path: str) -> Tuple[np.ndarray, int]:
+        """Extract audio from video file using FFmpeg."""
+        try:
+            if not Path(video_path).exists():
+                raise AudioProcessingError(f"Video file not found: {video_path}")
+            
+            temp_audio = Path(video_path).with_suffix('.tmp.wav')
+            
+            cmd = [
+                'ffmpeg', '-i', str(video_path),
+                '-vn', '-acodec', 'pcm_s16le',
+                '-ar', str(self.sample_rate),
+                '-ac', '1', '-y', str(temp_audio)
+            ]
+            
+            subprocess.run(cmd, check=True, capture_output=True)
+            
+            audio_array, sr = librosa.load(
+                temp_audio,
+                sr=self.sample_rate,
+                mono=True
+            )
+            
+            temp_audio.unlink()
+            return audio_array, sr
+            
+        except subprocess.CalledProcessError as e:
+            raise AudioProcessingError(f"FFmpeg error: {e.stderr.decode()}")
+        except Exception as e:
+            raise AudioProcessingError(f"Error extracting audio: {str(e)}")
+
+    def _segment_audio(
+        self,
+        audio: np.ndarray,
+        min_silence_len: int = 500,
+        silence_thresh: float = -40
+    ) -> list[Tuple[int, int]]:
+        """Segment audio based on silence detection."""
+        min_silence_samples = int(min_silence_len * self.sample_rate / 1000)
+        db = librosa.amplitude_to_db(np.abs(audio), ref=np.max)
+        silent = db < silence_thresh
+        
+        boundaries = []
+        is_silent = True
+        current_start = 0
+        
+        for i, s in enumerate(silent):
+            if is_silent and not s:
+                current_start = i
+                is_silent = False
+            elif not is_silent and s:
+                if i - current_start >= min_silence_samples:
+                    boundaries.append((current_start, i))
+                is_silent = True
+        
+        if not is_silent:
+            boundaries.append((current_start, len(audio)))
+            
+        return boundaries
+
+    def _transcribe_segment(
+        self,
+        audio_segment: np.ndarray
+    ) -> Tuple[str, float]:
+        """Transcribe an audio segment using Wav2Vec2."""
+        inputs = self.processor(
+            audio_segment,
+            sampling_rate=self.sample_rate,
+            return_tensors="pt",
+            padding=True
+        ).to(self.device)
+        
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            logits = outputs.logits
+            
+        predicted_ids = torch.argmax(logits, dim=-1)
+        confidence = torch.mean(torch.max(logits.softmax(dim=-1), dim=-1)[0])
+        
+        transcription = self.processor.decode(predicted_ids[0])
+        
+        return transcription.text, confidence.item()
+
+    def process_audio(
+        self,
+        video_path: str,
+        segment_audio: bool = True
+    ) -> list[AudioSegment]:
+        """Process audio from video file for transcription."""
+        logging.info(f"Processing audio from {video_path}")
+        
+        audio_array, sr = self._extract_audio(video_path)
+        
+        if segment_audio:
+            segments = self._segment_audio(audio_array)
+            results = []
+            
+            for start_idx, end_idx in segments:
+                start_time = start_idx / sr
+                end_time = end_idx / sr
+                segment = audio_array[start_idx:end_idx]
+                text, confidence = self._transcribe_segment(segment)
+                
+                if text.strip():
+                    results.append(
+                        AudioSegment(
+                            start_time=start_time,
+                            end_time=end_time,
+                            text=text,
+                            confidence=confidence
+                        )
+                    )
+        else:
+            text, confidence = self._transcribe_segment(audio_array)
+            results = [
+                AudioSegment(
+                    start_time=0,
+                    end_time=len(audio_array) / sr,
+                    text=text,
+                    confidence=confidence
+                )
+            ]
+            
+        logging.info(f"Completed audio processing: {len(results)} segments transcribed")
+        return results
