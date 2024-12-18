@@ -1,8 +1,15 @@
 from typing import List, Dict, Any, Optional
 import torch
 from transformers import VideoMAEForVideoClassification, VideoMAEFeatureExtractor
+from dataclasses import dataclass
 
 from .base_model import BaseModel
+
+@dataclass
+class SceneSegment:
+    start_frame: int
+    end_frame: int
+    confidence: float
 
 class SceneProcessor(BaseModel):
     """Processes video scenes using VideoMAE"""
@@ -10,9 +17,11 @@ class SceneProcessor(BaseModel):
     def __init__(
         self,
         model_name: str,
-        device: Optional[str] = None
+        device: Optional[str] = None,
+        min_segment_frames: int = 20
     ):
         super().__init__(model_name, device)
+        self.min_segment_frames = min_segment_frames
         self._load_model()
         
     def _load_model(self) -> None:
@@ -55,3 +64,8 @@ class SceneProcessor(BaseModel):
         }
         
         return predictions 
+
+    def process_scenes(self, frames):
+        # Implementation would go here
+        # For now, return dummy data
+        return [SceneSegment(0, len(frames)-1, 1.0)]

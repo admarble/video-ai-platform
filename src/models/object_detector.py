@@ -1,8 +1,16 @@
 from typing import List, Dict, Any
 import torch
 from transformers import DetrForObjectDetection, DetrImageProcessor
+from dataclasses import dataclass
 
 from .base_model import BaseModel
+
+@dataclass
+class DetectedObject:
+    label: str
+    confidence: float
+    bbox: tuple
+    track_id: int = None
 
 class ObjectDetector(BaseModel):
     """Detects objects in video frames using DETR"""
@@ -64,3 +72,7 @@ class ObjectDetector(BaseModel):
             })
             
         return results 
+
+    def process_frames(self, frames, enable_tracking=False):
+        # Implementation would go here
+        return [[DetectedObject("object", 0.9, (0,0,10,10))] for _ in frames]

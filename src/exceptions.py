@@ -1,7 +1,11 @@
 class VideoProcessingError(Exception):
-    """Custom exception for video processing errors"""
-    pass 
+    """Raised when video processing operations fail"""
+    pass
+
+class AudioProcessingError(Exception):
+    """Raised when audio processing operations fail"""
+    pass
 
 class ServiceInitializationError(Exception):
-    """Raised when service initialization fails"""
-    pass 
+    """Raised when services fail to initialize"""
+    pass

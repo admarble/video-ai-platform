@@ -25,6 +25,15 @@ class Settings(BaseSettings):
     BATCH_SIZE: int = 32
     MAX_VIDEO_LENGTH: int = 3600  # Maximum video length in seconds
     
+    # Storage paths
+    UPLOAD_DIR: str = "data/uploads"
+    PROCESSING_DIR: str = "data/processing"
+    
+    # Processing settings
+    FRAME_SAMPLING_RATE: int = 2
+    MIN_SEGMENT_LENGTH: int = 30
+    CONFIDENCE_THRESHOLD: float = 0.5
+    
     class Config:
         case_sensitive = True
         env_file = ".env"

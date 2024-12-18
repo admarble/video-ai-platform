@@ -2,6 +2,26 @@ from transformers import AutoModel, AutoProcessor
 from typing import Dict, Any
 import torch
 from src.core.config import settings
+from dataclasses import dataclass
+
+@dataclass
+class ModelConfig:
+    scene_model: str
+    object_model: str
+    audio_model: str
+    alignment_model: str
+    batch_size: int
+    num_workers: int
+
+def init_model_config() -> ModelConfig:
+    return ModelConfig(
+        scene_model=settings.SCENE_MODEL,
+        object_model=settings.OBJECT_MODEL,
+        audio_model=settings.AUDIO_MODEL,
+        alignment_model=settings.CLIP_MODEL,
+        batch_size=settings.BATCH_SIZE,
+        num_workers=4
+    )
 
 class ModelManager:
     def __init__(self):
