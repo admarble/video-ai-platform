@@ -1,0 +1,30 @@
+name: Documentation Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: pip install -r requirements-dev.txt
+    
+    - name: Check docstrings
+      run: python scripts/check_docstrings.py
+    
+    - name: Build documentation
+      run: |
+        cd docs
+        make html
