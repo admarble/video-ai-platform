@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 from pydantic_settings import BaseSettings
 from pydantic import AnyHttpUrl
+from dataclasses import dataclass
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
@@ -10,10 +11,10 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
     
     # Database
-    DATABASE_URL: str
+    DATABASE_URL: Optional[str] = None
     
     # Redis
-    REDIS_URL: str
+    REDIS_URL: Optional[str] = None
     
     # Model Settings
     SCENE_MODEL: str = "MCG-NJU/videomae-base"
@@ -37,5 +38,14 @@ class Settings(BaseSettings):
     class Config:
         case_sensitive = True
         env_file = ".env"
+        env_file_encoding = 'utf-8'
+
+@dataclass
+class ModelConfig:
+    """Configuration for ML models"""
+    gpu_enabled: bool = True
+    batch_size: int = 32
+    max_memory_gb: float = 4.0
+    cache_dir: Optional[str] = None
 
 settings = Settings()

@@ -1,3 +1,7 @@
+from src.services.scene_processor import SceneProcessor
+from src.services.object_detector import ObjectDetector
+from src.exceptions.service_exceptions import ServiceInitializationError
+
 class ServiceManager:
     def __init__(self):
         self._services = {}
