@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import time
 from concurrent.futures import ThreadPoolExecutor
+from typing import Generator
 
 from src.services.ai.service_manager import (
     ServiceManager,
@@ -46,7 +47,7 @@ def video_processor():
         processor.cleanup()
 
 @pytest.fixture
-def test_video() -> Path:
+def test_video() -> Generator[Path, None, None]:
     """Fixture for temporary test video"""
     video_path = VideoTestHelper.create_test_video()
     yield video_path
