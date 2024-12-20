@@ -1,0 +1,26 @@
+environment: dev
+version: 1.0.0
+models:
+  scene_model: MCG-NJU/videomae-base-finetuned-kinetics
+  object_model: facebook/detr-resnet-50
+  audio_model: facebook/wav2vec2-base-960h
+  alignment_model: openai/clip-vit-base-patch32
+  batch_size: 32
+  device: null
+
+processing:
+  max_video_size: 1000000000
+  sampling_rate: 1
+  min_segment_frames: 30
+  confidence_threshold: 0.7
+
+security:
+  api_key: ${API_KEY}
+  secret_key: ${SECRET_KEY}
+  allowed_origins:
+    - http://localhost:3000
+  max_requests_per_minute: 60
+
+cache_dir: ~/.video_ai_cache
+log_level: INFO
+enable_gpu: true 

@@ -1,0 +1,13 @@
+environment: staging
+models:
+  batch_size: 24
+
+processing:
+  max_video_size: 500000000
+
+security:
+  allowed_origins:
+    - https://staging.example.com
+  max_requests_per_minute: 120
+
+log_level: INFO 

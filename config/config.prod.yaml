@@ -1,0 +1,14 @@
+environment: prod
+models:
+  batch_size: 32
+
+processing:
+  max_video_size: 1000000000
+
+security:
+  allowed_origins:
+    - https://api.example.com
+    - https://www.example.com
+  max_requests_per_minute: 300
+
+log_level: WARNING 

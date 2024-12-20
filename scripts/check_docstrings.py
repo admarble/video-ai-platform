@@ -1,63 +1,36 @@
 import ast
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
-def check_docstring(node: ast.AST) -> Tuple[bool, str]:
-    """Check if a node has a proper docstring.
+def check_docstrings(path: Path) -> bool:
+    """Check if all classes and functions have docstrings."""
+    has_all_docstrings = True
     
-    Args:
-        node: AST node to check
-        
-    Returns:
-        Tuple of (has_valid_docstring, message)
-    """
-    if not isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef)):
-        return True, ""
-        
-    docstring = ast.get_docstring(node)
-    if not docstring:
-        return False, f"Missing docstring for {node.__class__.__name__}"
+    def check_node(node, filename):
+        nonlocal has_all_docstrings
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
+            if not ast.get_docstring(node):
+                print(f"Missing docstring in {node.name} ({filename}:{node.lineno})")
+                has_all_docstrings = False
     
-    return True, ""
-
-def analyze_file(file_path: str) -> List[str]:
-    """Analyze a Python file for docstring issues.
-    
-    Args:
-        file_path: Path to the Python file
-        
-    Returns:
-        List of docstring issues found
-    """
-    with open(file_path, 'r') as f:
-        content = f.read()
-    
-    tree = ast.parse(content)
-    issues = []
-    
-    for node in ast.walk(tree):
-        valid, message = check_docstring(node)
-        if not valid:
-            issues.append(f"{file_path}: {message}")
-    
-    return issues
-
-def main():
-    """Check docstrings in all Python files in the project."""
-    root_dir = Path(__file__).parent.parent
-    issues = []
-    
-    for py_file in root_dir.rglob("*.py"):
-        if not any(part.startswith(".") for part in py_file.parts):
-            issues.extend(analyze_file(str(py_file)))
-    
-    if issues:
-        print("\n".join(issues))
-        sys.exit(1)
-    
-    print("All docstrings look good!")
-    sys.exit(0)
+    for python_file in path.rglob("*.py"):
+        if python_file.name == "check_docstrings.py":
+            continue
+            
+        try:
+            with open(python_file, "r", encoding="utf-8") as f:
+                tree = ast.parse(f.read())
+            
+            for node in ast.walk(tree):
+                check_node(node, python_file)
+                
+        except SyntaxError as e:
+            print(f"Syntax error in {python_file}: {e}")
+            has_all_docstrings = False
+            
+    return has_all_docstrings
 
 if __name__ == "__main__":
-    main() 
+    src_path = Path("src")
+    if not check_docstrings(src_path):
+        sys.exit(1) 

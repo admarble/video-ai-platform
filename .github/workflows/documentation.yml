@@ -1,4 +1,4 @@
-name: Documentation Check
+name: Documentation
 
 on:
   push:
@@ -7,24 +7,31 @@ on:
     branches: [ main ]
 
 jobs:
-  check-docs:
+  docs:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
-    
+        python-version: '3.9'
+        
     - name: Install dependencies
-      run: pip install -r requirements-dev.txt
-    
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+        pip install pdoc3
+        
     - name: Check docstrings
       run: python scripts/check_docstrings.py
-    
-    - name: Build documentation
-      run: |
-        cd docs
-        make html
+        
+    - name: Generate documentation
+      run: pdoc --html --output-dir docs/ src/
+
+    - name: Deploy documentation
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

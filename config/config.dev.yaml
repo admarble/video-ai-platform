@@ -1,0 +1,13 @@
+environment: dev
+models:
+  batch_size: 16
+
+processing:
+  max_video_size: 100000000
+
+security:
+  allowed_origins:
+    - http://localhost:3000
+    - http://localhost:8080
+
+log_level: DEBUG 

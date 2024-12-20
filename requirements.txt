@@ -62,3 +62,6 @@ torch>=1.7.0
 decord>=0.6.0
 pytest>=6.0.0
 mock>=4.0.0
+
+# Configuration management
+pyyaml>=6.0
