@@ -1,6 +1,11 @@
 import logging
-from typing import Optional, Dict, Any, Union, Type
+from typing import Optional, Dict, Any, Union, Type, cast, TypeVar, Generator, TYPE_CHECKING
 from contextlib import contextmanager
+
+if TYPE_CHECKING:
+    from opentelemetry.trace import Span as OTelSpan
+else:
+    OTelSpan = Any
 
 # OpenTelemetry imports with type hints
 try:
@@ -9,7 +14,7 @@ try:
     from opentelemetry.sdk.trace.export import BatchSpanProcessor
     from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
     from opentelemetry.sdk.resources import Resource
-    from opentelemetry.semconv.resource.attributes import ResourceAttributes
+    from opentelemetry.sdk.resources import SERVICE_NAME, SERVICE_VERSION
     from opentelemetry.trace import Span, Status, StatusCode
     OPENTELEMETRY_AVAILABLE = True
 except ImportError:
@@ -26,11 +31,12 @@ except ImportError:
     TracerProvider = type('TracerProvider', (), {})
     OTLPSpanExporter = type('OTLPSpanExporter', (), {})
     Resource = type('Resource', (), {'create': staticmethod(lambda x: None)})
-    ResourceAttributes = type('ResourceAttributes', (), {
-        'SERVICE_NAME': 'service.name',
-        'SERVICE_VERSION': 'service.version'
-    })
+    SERVICE_NAME = 'service.name'
+    SERVICE_VERSION = 'service.version'
     trace = None
+
+# Type variable for the context manager
+T = TypeVar('T', bound=Optional[OTelSpan])
 
 class TracingConfig:
     """Configuration for tracing system"""
@@ -64,8 +70,8 @@ class TracingSystem:
         try:
             # Create resource attributes
             resource = Resource.create({
-                ResourceAttributes.SERVICE_NAME: self.config.service_name,
-                ResourceAttributes.SERVICE_VERSION: "1.0.0",
+                SERVICE_NAME: self.config.service_name,
+                SERVICE_VERSION: "1.0.0",
                 "environment": "production"
             })
             
@@ -97,8 +103,8 @@ class TracingSystem:
         self,
         name: str,
         attributes: Optional[Dict[str, Any]] = None,
-        parent: Optional['Span'] = None
-    ):
+        parent: Optional[OTelSpan] = None
+    ) -> Generator[Optional[OTelSpan], None, None]:
         """Start a new trace span"""
         if not self.config.enabled or not self.tracer:
             yield None
@@ -118,7 +124,7 @@ class TracingSystem:
 
     def add_event(
         self,
-        span: Optional['Span'],
+        span: Optional[OTelSpan],
         name: str,
         attributes: Optional[Dict[str, Any]] = None
     ) -> None:
@@ -131,7 +137,7 @@ class TracingSystem:
 
     def record_exception(
         self,
-        span: Optional['Span'],
+        span: Optional[OTelSpan],
         exception: Exception,
         attributes: Optional[Dict[str, Any]] = None
     ) -> None:
