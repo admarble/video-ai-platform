@@ -174,7 +174,10 @@
 - [ ] Error Handling
   - [x] Error Tracking
   - [x] Error Metrics
-  - [ ] Retry Mechanisms
+  - [x] Retry Mechanisms
+    - [x] Fixed Delay Strategy
+    - [x] Exponential Backoff
+    - [x] Random Jitter
   - [ ] Fallback Strategies
 - [ ] Logging
   - [x] Structured Logging
