@@ -2,6 +2,19 @@
 
 A robust monitoring system with built-in retry capabilities for handling transient failures in metric collection and alert notifications.
 
+## Project Status
+
+✅ Core monitoring functionality
+✅ Retry mechanisms with multiple strategies
+✅ Alert management system
+✅ Metric collection and storage
+✅ Configuration management
+⬜️ Dashboard UI
+⬜️ Real-time monitoring
+⬜️ Advanced analytics
+⬜️ Integration tests
+⬜️ Documentation website
+
 ## Features
 
 - Multiple retry strategies:

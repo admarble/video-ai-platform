@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication &mdash; Your Project Name  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Welcome to Documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Your Project Name
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initialize-authentication-manager">Initialize Authentication Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-management">User Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-new-user">Create a New User</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user-authentication">User Authentication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#token-refresh">Token Refresh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#permission-checking">Permission Checking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#password-management">Password Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user-account-management">User Account Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#security-features">Security Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Your Project Name</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Authentication</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/core/authentication.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="authentication">
+<h1>Authentication<a class="headerlink" href="#authentication" title="Permalink to this heading"></a></h1>
+<p>The video processing platform uses a secure, role-based authentication system that provides user management, token-based authentication, and fine-grained access control.</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Role-based access control (Admin, Operator, Viewer)</p></li>
+<li><p>JWT (JSON Web Token) based authentication</p></li>
+<li><p>Access and refresh token system</p></li>
+<li><p>Password security with bcrypt hashing</p></li>
+<li><p>User activation/deactivation</p></li>
+<li><p>Last login tracking</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
+<p>Create a configuration file (e.g. <code class="docutils literal notranslate"><span class="pre">config.json</span></code>) with the following settings:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;jwt_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-secret-key&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;access_token_expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;refresh_token_expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">86400</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;min_password_length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_db_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;users.json&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="usage-examples">
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this heading"></a></h2>
+<section id="initialize-authentication-manager">
+<h3>Initialize Authentication Manager<a class="headerlink" href="#initialize-authentication-manager" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">auth.auth_manager</span> <span class="kn">import</span> <span class="n">create_auth_manager</span><span class="p">,</span> <span class="n">UserRole</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">auth_manager</span> <span class="o">=</span> <span class="n">create_auth_manager</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config.json&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="user-management">
+<h3>User Management<a class="headerlink" href="#user-management" title="Permalink to this heading"></a></h3>
+<section id="create-a-new-user">
+<h4>Create a New User<a class="headerlink" href="#create-a-new-user" title="Permalink to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;SecurePass123!&quot;</span><span class="p">,</span>
+    <span class="n">role</span><span class="o">=</span><span class="n">UserRole</span><span class="o">.</span><span class="n">ADMIN</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="user-authentication">
+<h4>User Authentication<a class="headerlink" href="#user-authentication" title="Permalink to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">access_token</span><span class="p">,</span> <span class="n">refresh_token</span> <span class="o">=</span> <span class="n">auth_manager</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;SecurePass123!&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="token-refresh">
+<h4>Token Refresh<a class="headerlink" href="#token-refresh" title="Permalink to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_access_token</span> <span class="o">=</span> <span class="n">auth_manager</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="n">refresh_token</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="permission-checking">
+<h4>Permission Checking<a class="headerlink" href="#permission-checking" title="Permalink to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">check_permission</span><span class="p">(</span><span class="n">access_token</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">UserRole</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="password-management">
+<h4>Password Management<a class="headerlink" href="#password-management" title="Permalink to this heading"></a></h4>
+<p>Change Password:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">change_password</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="n">old_password</span><span class="o">=</span><span class="s2">&quot;OldPass123!&quot;</span><span class="p">,</span>
+    <span class="n">new_password</span><span class="o">=</span><span class="s2">&quot;NewPass123!&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Reset Password (Admin only):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">reset_password</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="n">new_password</span><span class="o">=</span><span class="s2">&quot;NewPass123!&quot;</span><span class="p">,</span>
+    <span class="n">admin_token</span><span class="o">=</span><span class="n">admin_access_token</span><span class="o">.</span><span class="n">token</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="user-account-management">
+<h4>User Account Management<a class="headerlink" href="#user-account-management" title="Permalink to this heading"></a></h4>
+<p>Deactivate User (Admin only):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">deactivate_user</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="n">admin_token</span><span class="o">=</span><span class="n">admin_access_token</span><span class="o">.</span><span class="n">token</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Get User Info (Admin only):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user_info</span> <span class="o">=</span> <span class="n">auth_manager</span><span class="o">.</span><span class="n">get_user_info</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="n">admin_token</span><span class="o">=</span><span class="n">admin_access_token</span><span class="o">.</span><span class="n">token</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="security-features">
+<h2>Security Features<a class="headerlink" href="#security-features" title="Permalink to this heading"></a></h2>
+<p>Passwords must meet the following requirements:</p>
+<ul class="simple">
+<li><p>Minimum length of 8 characters (configurable)</p></li>
+<li><p>At least one uppercase letter</p></li>
+<li><p>At least one lowercase letter</p></li>
+<li><p>At least one digit</p></li>
+<li><p>At least one special character (!&#64;#$%^&amp;*(),.?”:{}|&lt;&gt;)</p></li>
+</ul>
+<p>The system uses a dual-token approach:</p>
+<ul class="simple">
+<li><p>Access Token: Short-lived token (default 1 hour) for API access</p></li>
+<li><p>Refresh Token: Long-lived token (default 24 hours) for obtaining new access tokens</p></li>
+</ul>
+<p>The system implements a role hierarchy:</p>
+<ol class="arabic simple">
+<li><p>Admin: Full system access</p></li>
+<li><p>Operator: Limited administrative access</p></li>
+<li><p>Viewer: Read-only access</p></li>
+</ol>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading"></a></h2>
+<p>The system defines several error types:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AuthError</span></code>: Base authentication error</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InvalidCredentialsError</span></code>: Invalid username or password</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TokenError</span></code>: Invalid or expired token</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PermissionError</span></code>: Insufficient permissions</p></li>
+</ul>
+<p>Example error handling:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">auth_manager</span><span class="o">.</span><span class="n">check_permission</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">UserRole</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Insufficient permissions&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">TokenError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid or expired token&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
