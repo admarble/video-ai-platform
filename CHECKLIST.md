@@ -60,7 +60,7 @@
 
 ### Documentation
 - [ ] API documentation using Sphinx
-  - [ ] Documentation structure setup
+  - [x] Documentation structure setup
   - [x] Docstring coverage checks
   - [x] Automated doc builds
   - [ ] API reference docs
