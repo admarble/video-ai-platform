@@ -5,6 +5,8 @@ Welcome to Documentation
    :maxdepth: 2
    :caption: Contents:
 
+   core/authentication
+
 Indices and tables
 ==================
 
