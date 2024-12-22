@@ -60,9 +60,13 @@
 
 ### Documentation
 - [ ] API documentation using Sphinx
-  - [x] Documentation structure setup
-  - [x] Docstring coverage checks
-  - [x] Automated doc builds
+  - [ ] Documentation structure setup
+    - [ ] Install Sphinx and extensions
+    - [ ] Configure project information
+    - [ ] Set up build system
+    - [ ] Configure theme and extensions
+  - [ ] Docstring coverage checks
+  - [ ] Automated doc builds
   - [ ] API reference docs
   - [ ] Usage examples & tutorials
   - [ ] Performance guidelines
