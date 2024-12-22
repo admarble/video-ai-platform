@@ -120,16 +120,16 @@
 
 ### API Keys & Credentials
 - [ ] Email Configuration
-  - [x] SMTP Server Setup
-  - [x] Production Email Addresses
-  - [x] Secure Password Storage
+  - [ ] SMTP Server Setup
+  - [ ] Production Email Addresses
+  - [ ] Secure Password Storage
 - [ ] Webhook Integration
-  - [x] Slack Webhook URL
-  - [x] Custom Webhook Endpoints
-  - [x] Authentication Tokens
-- [x] API Authentication
-  - [x] Production API Keys
-  - [x] Secret Keys
+  - [ ] Slack Webhook URL
+  - [ ] Custom Webhook Endpoints
+  - [ ] Authentication Tokens
+- [ ] API Authentication
+  - [ ] Production API Keys
+  - [ ] Secret Keys
   - [x] Environment-specific URLs
 - [x] Credential Management
   - [x] Key Rotation System
