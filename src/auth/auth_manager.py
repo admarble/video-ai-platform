@@ -10,6 +10,7 @@ import json
 import secrets
 import time
 import re
+import requests
 from typing_extensions import Literal
 
 class UserRole(Enum):
@@ -42,6 +43,8 @@ class UserCredentials:
     role: UserRole
     is_active: bool = True
     last_login: Optional[float] = None
+    failed_attempts: int = 0
+    last_failed_attempt: Optional[float] = None
 
 @dataclass 
 class AuthToken:
@@ -67,6 +70,12 @@ class AuthenticationManager:
         
         # Initialize JWT signing key
         self.jwt_secret = config.get("jwt_secret") or secrets.token_hex(32)
+        
+        # CAPTCHA configuration
+        self.recaptcha_secret = config.get("recaptcha_secret_key")
+        self.recaptcha_verify_url = "https://www.google.com/recaptcha/api/siteverify"
+        self.max_login_attempts = config.get("max_login_attempts", 3)
+        self.login_attempt_window = config.get("login_attempt_window", 300)  # 5 minutes
         
     def _load_users(self) -> None:
         """Load user database from file"""
@@ -155,10 +164,65 @@ class AuthenticationManager:
         # Save changes
         self._save_users()
         
+    def _verify_captcha(self, captcha_response: str) -> bool:
+        """Verify reCAPTCHA response"""
+        if not self.recaptcha_secret:
+            self.logger.warning("reCAPTCHA secret key not configured")
+            return True
+            
+        try:
+            response = requests.post(
+                self.recaptcha_verify_url,
+                data={
+                    "secret": self.recaptcha_secret,
+                    "response": captcha_response
+                }
+            )
+            result = response.json()
+            return result.get("success", False)
+            
+        except Exception as e:
+            self.logger.error(f"CAPTCHA verification error: {str(e)}")
+            return False
+            
+    def _check_requires_captcha(self, username: str) -> bool:
+        """Check if login requires CAPTCHA"""
+        if username not in self.users:
+            return False
+            
+        user = self.users[username]
+        current_time = time.time()
+        
+        # Reset failed attempts if window has expired
+        if (user.last_failed_attempt and 
+            current_time - user.last_failed_attempt >= self.login_attempt_window):
+            user.failed_attempts = 0
+            user.last_failed_attempt = None
+            self._save_users()
+            
+        return user.failed_attempts >= self.max_login_attempts
+        
+    def _record_failed_attempt(self, username: str) -> None:
+        """Record a failed login attempt"""
+        if username in self.users:
+            user = self.users[username]
+            user.failed_attempts += 1
+            user.last_failed_attempt = time.time()
+            self._save_users()
+
+    def _reset_failed_attempts(self, username: str) -> None:
+        """Reset failed login attempts after successful login"""
+        if username in self.users:
+            user = self.users[username]
+            user.failed_attempts = 0
+            user.last_failed_attempt = None
+            self._save_users()
+
     def authenticate(
         self,
         username: str,
-        password: str
+        password: str,
+        captcha_response: Optional[str] = None
     ) -> tuple[AuthToken, AuthToken]:
         """Authenticate user and return access/refresh tokens"""
         if username not in self.users:
@@ -169,12 +233,25 @@ class AuthenticationManager:
         if not user.is_active:
             raise AuthError("Account is inactive")
             
+        # Check if CAPTCHA is required
+        if self._check_requires_captcha(username):
+            if not captcha_response:
+                raise AuthError("CAPTCHA required")
+                
+            if not self._verify_captcha(captcha_response):
+                self._record_failed_attempt(username)
+                raise AuthError("Invalid CAPTCHA")
+            
         # Verify password
         if not bcrypt.checkpw(
             password.encode(),
             user.password_hash.encode()
         ):
+            self._record_failed_attempt(username)
             raise InvalidCredentialsError("Invalid username or password")
+            
+        # Reset failed attempts on successful login
+        self._reset_failed_attempts(username)
             
         # Update last login
         user.last_login = time.time()

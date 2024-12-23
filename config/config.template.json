@@ -1,0 +1,12 @@
+{
+    "jwt_secret": "your-secret-key",
+    "access_token_expiry": 3600,
+    "refresh_token_expiry": 86400,
+    "min_password_length": 8,
+    "user_db_path": "users.json",
+    
+    "recaptcha_secret_key": "your-recaptcha-secret-key",
+    "recaptcha_site_key": "your-recaptcha-site-key",
+    "max_login_attempts": 3,
+    "login_attempt_window": 300
+} 

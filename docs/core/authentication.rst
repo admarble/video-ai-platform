@@ -137,6 +137,46 @@ Passwords must meet the following requirements:
 * At least one digit
 * At least one special character (!@#$%^&*(),.?":{}|<>)
 
+Brute Force Protection
+^^^^^^^^^^^^^^^^^^
+
+The system implements several layers of brute force protection:
+
+* Failed Login Tracking: Tracks the number of failed login attempts per user
+* Account Lockout: Requires CAPTCHA verification after 3 failed attempts within 5 minutes
+* IP-based Rate Limiting: Limits the number of requests from an IP address
+* CAPTCHA Integration: reCAPTCHA v2 integration for additional security
+
+To set up CAPTCHA protection:
+
+1. Sign up for reCAPTCHA at https://www.google.com/recaptcha
+2. Add your site and get API keys
+3. Configure the keys in config.json:
+
+.. code-block:: json
+
+    {
+        "recaptcha_secret_key": "your-secret-key",
+        "recaptcha_site_key": "your-site-key"
+    }
+
+4. Add the reCAPTCHA widget to your login form:
+
+.. code-block:: html
+
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+
+5. Pass the CAPTCHA response to the authentication call:
+
+.. code-block:: python
+
+    access_token, refresh_token = auth_manager.authenticate(
+        username="user",
+        password="password",
+        captcha_response=g_recaptcha_response
+    )
+
 Token System
 ^^^^^^^^^^
 

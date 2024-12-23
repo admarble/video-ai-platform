@@ -1,5 +1,5 @@
 import pytest
-from xss_protection import XSSProtector, XSSProtectionMode
+from src.security.xss.xss_protection import XSSProtector, XSSProtectionMode
 import json
 
 @pytest.fixture

@@ -1,11 +1,11 @@
 import pytest
 from pathlib import Path
-from secure_video_processor import (
+from src.processors.secure_video_processor import (
     SecureVideoProcessorWithXSS,
     SecurityLevel,
     CORSConfig
 )
-from xss_protection import XSSProtectionMode
+from src.security.xss.xss_protection import XSSProtectionMode
 
 @pytest.fixture
 def cors_config():
