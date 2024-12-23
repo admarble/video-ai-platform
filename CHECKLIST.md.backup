@@ -8,10 +8,10 @@
   - [x] Authorization Framework
   - [x] Input Validation Framework
   - [x] Rate Limiting
-  - [x] Brute Force Protection
-    - [x] Login Attempt Tracking
-    - [x] Account Lockout System
-    - [x] IP-based Blocking
+  - [ ] Brute Force Protection
+    - [ ] Login Attempt Tracking
+    - [ ] Account Lockout System
+    - [ ] IP-based Blocking
     - [ ] CAPTCHA Integration
   - [ ] API Keys & Credentials Setup
     - [ ] Production API Keys
@@ -19,9 +19,9 @@
     - [x] Environment-specific URLs
   - [x] Data Encryption
   - [x] Audit Logging
-  - [x] CORS Configuration
-  - [x] Security Headers
-  - [x] XSS Protection
+  - [ ] CORS Configuration
+  - [ ] Security Headers
+  - [ ] XSS Protection
 
 ### 1.2 Core Infrastructure
 - [x] Storage Management
