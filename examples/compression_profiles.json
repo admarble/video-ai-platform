@@ -1,0 +1,52 @@
+{
+    "profiles": {
+        "4k_quality": {
+            "name": "4k_quality",
+            "video_codec": "libx264",
+            "audio_codec": "aac",
+            "video_bitrate": "8M",
+            "audio_bitrate": "256k",
+            "preset": "veryslow",
+            "crf": 16,
+            "compression_level": 9,
+            "performance_score": 0.0,
+            "usage_count": 0
+        },
+        "hd_balanced": {
+            "name": "hd_balanced",
+            "video_codec": "libx264",
+            "audio_codec": "aac",
+            "video_bitrate": "3M",
+            "audio_bitrate": "128k",
+            "preset": "medium",
+            "crf": 23,
+            "compression_level": 5,
+            "performance_score": 0.0,
+            "usage_count": 0
+        },
+        "web_optimized": {
+            "name": "web_optimized",
+            "video_codec": "libx264",
+            "audio_codec": "aac",
+            "video_bitrate": "1.5M",
+            "audio_bitrate": "96k",
+            "preset": "veryfast",
+            "crf": 28,
+            "compression_level": 3,
+            "performance_score": 0.0,
+            "usage_count": 0
+        },
+        "live_streaming": {
+            "name": "live_streaming",
+            "video_codec": "libx264",
+            "audio_codec": "aac",
+            "video_bitrate": "2.5M",
+            "audio_bitrate": "128k",
+            "preset": "ultrafast",
+            "crf": 25,
+            "compression_level": 1,
+            "performance_score": 0.0,
+            "usage_count": 0
+        }
+    }
+} 
