@@ -6,6 +6,7 @@ Welcome to Documentation
    :caption: Contents:
 
    core/authentication
+   core/compression
 
 Indices and tables
 ==================
