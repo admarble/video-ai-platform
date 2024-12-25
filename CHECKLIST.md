@@ -77,7 +77,10 @@
     - [x] Exponential Backoff
     - [x] Random Jitter
   - [x] Fallback Strategies
-  - [ ] Circuit Breakers
+  - [x] Circuit Breakers
+    - [x] Basic Circuit Breaker
+    - [x] Distributed Circuit Breaker
+    - [x] Video-specific Circuit Breaker
   - [ ] Dead Letter Queues
 - [x] Logging System
   - [x] Structured Logging
@@ -184,6 +187,7 @@
     - [x] Configuration Options
     - [x] Best Practices
   - [x] README Documentation
+  - [x] Developer Guide
   - [ ] Performance Guidelines
   - [ ] Architecture Documentation
   - [ ] Deployment Guide
