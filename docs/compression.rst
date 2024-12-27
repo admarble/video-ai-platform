@@ -1,6 +1,50 @@
 Compression Features
 ===================
 
+.. _compression-middleware:
+
+Compression Middleware
+--------------------
+
+Cuthrough now includes powerful compression middleware that supports multiple compression algorithms:
+
+- **Gzip**: Standard compression with good balance of speed and compression ratio
+- **Deflate**: Alternative to Gzip with slightly different performance characteristics
+- **Brotli**: Modern compression algorithm with superior compression ratios
+
+Usage Example:
+
+.. code-block:: python
+
+    from cuthrough import CompressionMiddleware
+    
+    # Initialize middleware with desired compression
+    middleware = CompressionMiddleware(algorithm='brotli', level=4)
+    
+    # Apply compression to your data stream
+    compressed_data = middleware.compress(video_stream)
+
+Streaming Support
+~~~~~~~~~~~~~~~
+
+The compression middleware supports streaming compression for efficient handling of large video files:
+
+.. code-block:: python
+
+    with middleware.stream_compress(input_stream) as compressed_stream:
+        # Process your compressed stream
+        process_video(compressed_stream)
+
+Compression Metrics
+~~~~~~~~~~~~~~~~
+
+Monitor compression performance with built-in metrics:
+
+- Compression ratio
+- Processing time
+- Memory usage
+- Throughput
+
 .. _adaptive-optimization:
 
 Adaptive Optimization System

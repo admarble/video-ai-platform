@@ -243,6 +243,15 @@ class CodecSupport:
         }
 
 @dataclass
+class OptimizationConfig:
+    """Configuration for optimization strategies"""
+    strategy: OptimizationStrategy = OptimizationStrategy.GRADIENT
+    learning_rate: float = 0.1
+    gradient_momentum: float = 0.9
+    history_weight_decay: float = 0.95
+    min_samples: int = 10
+    max_adjustment_per_step: float = 0.2
+
 class CompressionProfile:
     """Represents a compression configuration profile"""
     name: str

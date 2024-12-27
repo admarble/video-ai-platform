@@ -1,65 +1,69 @@
-from pathlib import Path
-import time
-from cache_manager import create_cache_manager, CacheLevel, CacheStrategy
+import asyncio
+import logging
+from circuit_breaker import CircuitBreakerRegistry, CircuitConfig, CircuitOpenError, circuit_breaker
 
-def main():
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+
+# Create a registry
+registry = CircuitBreakerRegistry()
+
+# Create a custom configuration
+config = CircuitConfig(
+    failure_threshold=3,        # Open after 3 failures
+    reset_timeout=30,          # Try to reset after 30 seconds
+    half_open_limit=2,         # Allow 2 test requests when half-open
+    window_size=60,            # Count failures in 60 second window
+    success_threshold=2        # Close after 2 consecutive successes
+)
+
+# Example async function with circuit breaker
+@circuit_breaker("example_service", registry, config)
+async def example_service(succeed: bool = True):
+    """Example service that can succeed or fail on demand"""
+    if not succeed:
+        raise Exception("Service failed!")
+    return "Service succeeded!"
+
+# Fallback function for when circuit is open
+async def fallback_function(*args, **kwargs):
+    return "Using fallback function"
+
+# Example with fallback
+@circuit_breaker("example_with_fallback", registry, config, fallback=fallback_function)
+async def service_with_fallback(succeed: bool = True):
+    """Example service with fallback behavior"""
+    if not succeed:
+        raise Exception("Service failed!")
+    return "Service succeeded!"
+
+async def main():
+    # Test normal operation
     try:
-        # Create a cache manager with default settings
-        cache_manager = create_cache_manager()
-
-        # Or customize the configuration
-        custom_cache = create_cache_manager(
-            level=CacheLevel.HYBRID,  # Uses both memory and disk
-            strategy=CacheStrategy.LRU,  # Least Recently Used eviction
-            max_memory_mb=2048,  # 2GB memory cache
-            max_disk_mb=10240,  # 10GB disk cache
-            cache_dir=Path("./cache")  # Custom cache directory
-        )
-
-        # Example data to cache
-        video_id = "12345"
-        video_key = f"video_{video_id}"
-        processing_result = {
-            'frames': [1, 2, 3, 4, 5],  # Example frames
-            'metadata': {'duration': 120, 'fps': 30},
-            'timestamp': 1234567890
-        }
-
-        print("Storing data in cache...")
-        # Store processing results
-        custom_cache.set(video_key, processing_result)
-
-        print("Retrieving data from cache...")
-        # Retrieve cached results
-        cached_result = custom_cache.get(video_key)
-        if cached_result:
-            print("Found cached result:", cached_result)
-        else:
-            print("No cached result found")
-
-        # Get cache statistics
-        stats = custom_cache.get_stats()
-        print("\nCache Statistics:")
-        print(f"Memory entries: {stats['memory_entries']}")
-        print(f"Memory size: {stats['memory_size']} bytes")
-        print(f"Disk entries: {stats['disk_entries']}")
-        print(f"Disk size: {stats['disk_size']} bytes")
-
-        print("\nDeleting cache entry...")
-        # Delete a cache entry
-        custom_cache.delete(video_key)
-
-        print("Clearing all cache entries...")
-        # Clear all cache entries
-        custom_cache.clear()
-
-    except KeyboardInterrupt:
-        print("\nShutting down gracefully...")
+        result = await example_service(succeed=True)
+        print("Success:", result)
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
-    finally:
-        # The cache manager's __del__ method will handle cleanup
-        print("Cleanup complete")
+        print("Error:", str(e))
+
+    # Test multiple failures
+    for i in range(4):
+        try:
+            result = await example_service(succeed=False)
+            print("Success:", result)
+        except CircuitOpenError as e:
+            print("Circuit open:", str(e))
+        except Exception as e:
+            print("Error:", str(e))
+
+    # Test fallback behavior
+    for i in range(4):
+        result = await service_with_fallback(succeed=False)
+        print("Fallback result:", result)
+
+    # Print circuit states
+    print("\nCircuit States:")
+    for name, state in registry.get_all_states().items():
+        print(f"{name}: {state}")
 
 if __name__ == "__main__":
-    main() 
+    asyncio.run(main()) 

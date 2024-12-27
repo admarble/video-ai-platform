@@ -11,6 +11,9 @@ Cuthrough is an advanced video compression tool that uses adaptive optimization 
    cli
    compression
    api
+   core/compression
+   core/authentication
+   developer_guide
    contributing
 
 Features
@@ -22,6 +25,13 @@ Features
 - Profile management
 - Comprehensive metrics tracking
 - Command-line interface
+- Compression middleware (Gzip, Deflate, Brotli)
+- Advanced security features
+  - Rate limiting
+  - CORS protection
+  - XSS protection
+  - CSP management
+  - WebSocket security
 
 Quick Installation
 ----------------
