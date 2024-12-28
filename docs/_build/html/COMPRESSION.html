@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compression Features &mdash; Cuthrough 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7fe72933" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Command Line Interface" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cuthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#compression-command">Compression Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#analysis-command">Analysis Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#id1">Basic Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#profile-management">Profile Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#creating-profiles">Creating Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#profile-options">Profile Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#common-options">Common Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#basic-compression">Basic Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Compression Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#compression-middleware">Compression Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#streaming-support">Streaming Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compression-metrics">Compression Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adaptive-optimization-system">Adaptive Optimization System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#optimization-strategies">Optimization Strategies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#OptimizationStrategy"><code class="docutils literal notranslate"><span class="pre">OptimizationStrategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#target-metrics">Target Metrics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CompressionMetric"><code class="docutils literal notranslate"><span class="pre">CompressionMetric</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#compression-profiles">Compression Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#predefined-profiles">Predefined Profiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#high-quality">1. High Quality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#balanced">2. Balanced</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fast">3. Fast</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-profiles">Custom Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quality-assessment">Quality Assessment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vmaf-video-multimethod-assessment-fusion">VMAF (Video Multimethod Assessment Fusion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ssim-structural-similarity-index">SSIM (Structural Similarity Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-quality-scores">Custom Quality Scores</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-monitoring">Performance Monitoring</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#real-time-metrics">Real-time Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#progress-tracking">Progress Tracking</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ProgressTracker"><code class="docutils literal notranslate"><span class="pre">ProgressTracker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#quality-focused-compression">1. Quality-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fast-compression">2. Fast Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#size-focused-compression">3. Size-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#balanced-compression">4. Balanced Compression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#adaptive-compression">Adaptive Compression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ffmpeg-integration">FFmpeg Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#logging-configuration">Logging Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#main-cli">Main CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#command-handlers">Command Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#helper-functions">Helper Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#type-hints">Type Hints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#creating-a-compression-profile">Creating a Compression Profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#using-the-ffmpeg-processor">Using the FFmpeg Processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#setting-up-logging">Setting Up Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/compression.html">Compression Middleware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#custom-configuration">Custom Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#compression-methods">Compression Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#metrics-and-monitoring">Metrics and Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#headers-handling">Headers Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#future-enhancements">Future Enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/authentication.html">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/authentication.html#initialize-authentication-manager">Initialize Authentication Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core/authentication.html#user-management">User Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#create-a-new-user">Create a New User</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#user-authentication">User Authentication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#token-refresh">Token Refresh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#permission-checking">Permission Checking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#password-management">Password Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#user-account-management">User Account Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#security-features">Security Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#setting-up-development-environment">Setting Up Development Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#system-architecture">System Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#component-overview">Component Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#component-interaction">Component Interaction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#contributing-guidelines">Contributing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#code-style">Code Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#commit-message-format">Commit Message Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#debugging-tips">Debugging Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#using-debug-mode">Using Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#using-the-debugger">Using the Debugger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cuthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Compression Features</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/compression.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="cli.html" class="btn btn-neutral float-left" title="Command Line Interface" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compression-features">
+<h1>Compression Features<a class="headerlink" href="#compression-features" title="Link to this heading"></a></h1>
+<section id="compression-middleware">
+<span id="id1"></span><h2>Compression Middleware<a class="headerlink" href="#compression-middleware" title="Link to this heading"></a></h2>
+<p>Cuthrough now includes powerful compression middleware that supports multiple compression algorithms:</p>
+<ul class="simple">
+<li><p><strong>Gzip</strong>: Standard compression with good balance of speed and compression ratio</p></li>
+<li><p><strong>Deflate</strong>: Alternative to Gzip with slightly different performance characteristics</p></li>
+<li><p><strong>Brotli</strong>: Modern compression algorithm with superior compression ratios</p></li>
+</ul>
+<p>Usage Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cuthrough</span> <span class="kn">import</span> <span class="n">CompressionMiddleware</span>
+
+<span class="c1"># Initialize middleware with desired compression</span>
+<span class="n">middleware</span> <span class="o">=</span> <span class="n">CompressionMiddleware</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;brotli&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Apply compression to your data stream</span>
+<span class="n">compressed_data</span> <span class="o">=</span> <span class="n">middleware</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">video_stream</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="streaming-support">
+<h3>Streaming Support<a class="headerlink" href="#streaming-support" title="Link to this heading"></a></h3>
+<p>The compression middleware supports streaming compression for efficient handling of large video files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">middleware</span><span class="o">.</span><span class="n">stream_compress</span><span class="p">(</span><span class="n">input_stream</span><span class="p">)</span> <span class="k">as</span> <span class="n">compressed_stream</span><span class="p">:</span>
+    <span class="c1"># Process your compressed stream</span>
+    <span class="n">process_video</span><span class="p">(</span><span class="n">compressed_stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="compression-metrics">
+<h3>Compression Metrics<a class="headerlink" href="#compression-metrics" title="Link to this heading"></a></h3>
+<p>Monitor compression performance with built-in metrics:</p>
+<ul class="simple">
+<li><p>Compression ratio</p></li>
+<li><p>Processing time</p></li>
+<li><p>Memory usage</p></li>
+<li><p>Throughput</p></li>
+</ul>
+</section>
+</section>
+<section id="adaptive-optimization-system">
+<span id="adaptive-optimization"></span><h2>Adaptive Optimization System<a class="headerlink" href="#adaptive-optimization-system" title="Link to this heading"></a></h2>
+<p>Cuthrough uses an advanced adaptive optimization system that automatically tunes compression parameters to achieve the best balance between quality, speed, and file size.</p>
+<section id="optimization-strategies">
+<span id="id2"></span><h3>Optimization Strategies<a class="headerlink" href="#optimization-strategies" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="OptimizationStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OptimizationStrategy</span></span><a class="headerlink" href="#OptimizationStrategy" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="OptimizationStrategy.SIMPLE">
+<span class="sig-name descname"><span class="pre">SIMPLE</span></span><a class="headerlink" href="#OptimizationStrategy.SIMPLE" title="Link to this definition"></a></dt>
+<dd><p>Basic parameter adjustment based on target metrics.</p>
+<ul class="simple">
+<li><p>Good for quick compressions</p></li>
+<li><p>Minimal computational overhead</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>SIMPLE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.8
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OptimizationStrategy.GRADIENT">
+<span class="sig-name descname"><span class="pre">GRADIENT</span></span><a class="headerlink" href="#OptimizationStrategy.GRADIENT" title="Link to this definition"></a></dt>
+<dd><p>Gradient-based parameter optimization.</p>
+<ul class="simple">
+<li><p>Better for finding optimal settings</p></li>
+<li><p>Uses historical performance data</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>GRADIENT<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--learning-rate<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--history-weight<span class="w"> </span><span class="m">0</span>.9
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OptimizationStrategy.ADAPTIVE">
+<span class="sig-name descname"><span class="pre">ADAPTIVE</span></span><a class="headerlink" href="#OptimizationStrategy.ADAPTIVE" title="Link to this definition"></a></dt>
+<dd><p>Dynamic parameter tuning based on video content.</p>
+<ul class="simple">
+<li><p>Best for varying content</p></li>
+<li><p>Adapts to changes in video characteristics</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>ADAPTIVE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--speed<span class="w"> </span><span class="m">0</span>.7
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OptimizationStrategy.WEIGHTED">
+<span class="sig-name descname"><span class="pre">WEIGHTED</span></span><a class="headerlink" href="#OptimizationStrategy.WEIGHTED" title="Link to this definition"></a></dt>
+<dd><p>Weighted optimization of multiple metrics.</p>
+<ul class="simple">
+<li><p>Good for specific requirements</p></li>
+<li><p>Balances conflicting goals</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>WEIGHTED<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--speed<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--size-reduction<span class="w"> </span><span class="m">0</span>.7
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="target-metrics">
+<span id="id3"></span><h3>Target Metrics<a class="headerlink" href="#target-metrics" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="CompressionMetric">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CompressionMetric</span></span><a class="headerlink" href="#CompressionMetric" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="CompressionMetric.QUALITY">
+<span class="sig-name descname"><span class="pre">QUALITY</span></span><a class="headerlink" href="#CompressionMetric.QUALITY" title="Link to this definition"></a></dt>
+<dd><p>Quality metric (0-1).</p>
+<ul class="simple">
+<li><p>Measured using VMAF or SSIM</p></li>
+<li><p>Higher values prioritize visual quality</p></li>
+<li><p>Affects encoder settings and bitrate</p></li>
+</ul>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">--quality</span> <span class="pre">0.9</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CompressionMetric.SPEED">
+<span class="sig-name descname"><span class="pre">SPEED</span></span><a class="headerlink" href="#CompressionMetric.SPEED" title="Link to this definition"></a></dt>
+<dd><p>Speed metric (0-1).</p>
+<ul class="simple">
+<li><p>Compression time relative to video duration</p></li>
+<li><p>Higher values use faster presets</p></li>
+<li><p>Trades quality for speed</p></li>
+</ul>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">--speed</span> <span class="pre">0.8</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CompressionMetric.SIZE_REDUCTION">
+<span class="sig-name descname"><span class="pre">SIZE_REDUCTION</span></span><a class="headerlink" href="#CompressionMetric.SIZE_REDUCTION" title="Link to this definition"></a></dt>
+<dd><p>Size reduction metric (0-1).</p>
+<ul class="simple">
+<li><p>Output size relative to input</p></li>
+<li><p>Higher values target smaller files</p></li>
+<li><p>Affects bitrate and compression level</p></li>
+</ul>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">--size-reduction</span> <span class="pre">0.7</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="compression-profiles">
+<span id="id4"></span><h2>Compression Profiles<a class="headerlink" href="#compression-profiles" title="Link to this heading"></a></h2>
+<section id="predefined-profiles">
+<span id="id5"></span><h3>Predefined Profiles<a class="headerlink" href="#predefined-profiles" title="Link to this heading"></a></h3>
+<section id="high-quality">
+<h4>1. High Quality<a class="headerlink" href="#high-quality" title="Link to this heading"></a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;high_quality&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;video_codec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;libx264&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audio_codec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aac&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;container_format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mp4&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;video_bitrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5M&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audio_bitrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;192k&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;preset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;veryslow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;quality_value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;multipass&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="balanced">
+<h4>2. Balanced<a class="headerlink" href="#balanced" title="Link to this heading"></a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;video_codec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;libx264&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audio_codec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aac&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;container_format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mp4&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;video_bitrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2M&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audio_bitrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;128k&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;preset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;quality_value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;multipass&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="fast">
+<h4>3. Fast<a class="headerlink" href="#fast" title="Link to this heading"></a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fast&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;video_codec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;libx264&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audio_codec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aac&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;container_format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mp4&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;video_bitrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1M&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audio_bitrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;128k&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;preset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ultrafast&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;quality_value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;multipass&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="custom-profiles">
+<span id="id6"></span><h3>Custom Profiles<a class="headerlink" href="#custom-profiles" title="Link to this heading"></a></h3>
+<p>Create custom profiles for specific needs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 4K High Quality Profile</span>
+cuthrough<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>4k_quality.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;4K Quality&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-codec<span class="w"> </span>libx265<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--preset<span class="w"> </span>slow<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-bitrate<span class="w"> </span>8M<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality-value<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--multipass
+
+<span class="c1"># Web Optimized Profile</span>
+cuthrough<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>web.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;Web Optimized&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-codec<span class="w"> </span>libvpx-vp9<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--container<span class="w"> </span>webm<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-bitrate<span class="w"> </span>1M<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality-value<span class="w"> </span><span class="m">31</span>
+
+<span class="c1"># Quick Preview Profile</span>
+cuthrough<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>preview.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;Preview&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-codec<span class="w"> </span>libx264<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--preset<span class="w"> </span>ultrafast<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-bitrate<span class="w"> </span>500k<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality-value<span class="w"> </span><span class="m">35</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quality-assessment">
+<span id="id7"></span><h2>Quality Assessment<a class="headerlink" href="#quality-assessment" title="Link to this heading"></a></h2>
+<section id="vmaf-video-multimethod-assessment-fusion">
+<h3>VMAF (Video Multimethod Assessment Fusion)<a class="headerlink" href="#vmaf-video-multimethod-assessment-fusion" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>VMAF is Netflix’s open-source quality metric.</p>
+</div>
+<ul class="simple">
+<li><p>Perceptual video quality assessment</p></li>
+<li><p>Machine learning-based</p></li>
+<li><p>More accurate for modern content</p></li>
+</ul>
+</section>
+<section id="ssim-structural-similarity-index">
+<h3>SSIM (Structural Similarity Index)<a class="headerlink" href="#ssim-structural-similarity-index" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SSIM is used as a fallback when VMAF is unavailable.</p>
+</div>
+<ul class="simple">
+<li><p>Traditional quality metric</p></li>
+<li><p>Measures structural similarity</p></li>
+<li><p>Fast computation</p></li>
+</ul>
+</section>
+<section id="custom-quality-scores">
+<h3>Custom Quality Scores<a class="headerlink" href="#custom-quality-scores" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Normalized between 0 and 1</p></li>
+<li><p>Combines multiple metrics</p></li>
+<li><p>Weighted based on content type</p></li>
+<li><p>Adapts to user preferences</p></li>
+</ul>
+</section>
+</section>
+<section id="performance-monitoring">
+<span id="id8"></span><h2>Performance Monitoring<a class="headerlink" href="#performance-monitoring" title="Link to this heading"></a></h2>
+<section id="real-time-metrics">
+<h3>Real-time Metrics<a class="headerlink" href="#real-time-metrics" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--save-metrics<span class="w"> </span>metrics.json
+</pre></div>
+</div>
+<p>Example metrics output:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;metrics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;speed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.75</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;size_reduction&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.65</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;performance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;compression_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">120.5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;cpu_usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">85.2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;memory_usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">512.0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="progress-tracking">
+<h3>Progress Tracking<a class="headerlink" href="#progress-tracking" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="ProgressTracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ProgressTracker</span></span><a class="headerlink" href="#ProgressTracker" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Real-time progress display</p></li>
+<li><p>ETA calculation</p></li>
+<li><p>Frame processing rate</p></li>
+<li><p>Size estimation</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="logging">
+<h3>Logging<a class="headerlink" href="#logging" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--debug<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--log-file<span class="w"> </span>compression.log
+</pre></div>
+</div>
+<p>Log output includes:</p>
+<ul class="simple">
+<li><p>Parameter adjustments</p></li>
+<li><p>Quality measurements</p></li>
+<li><p>Performance metrics</p></li>
+<li><p>Error handling</p></li>
+</ul>
+</section>
+</section>
+<section id="best-practices">
+<span id="id9"></span><h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="quality-focused-compression">
+<h3>1. Quality-Focused Compression<a class="headerlink" href="#quality-focused-compression" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.95<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>ADAPTIVE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--multipass
+</pre></div>
+</div>
+</section>
+<section id="fast-compression">
+<h3>2. Fast Compression<a class="headerlink" href="#fast-compression" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--speed<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>SIMPLE
+</pre></div>
+</div>
+</section>
+<section id="size-focused-compression">
+<h3>3. Size-Focused Compression<a class="headerlink" href="#size-focused-compression" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--size-reduction<span class="w"> </span><span class="m">0</span>.8<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>WEIGHTED
+</pre></div>
+</div>
+</section>
+<section id="balanced-compression">
+<h3>4. Balanced Compression<a class="headerlink" href="#balanced-compression" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.8<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--speed<span class="w"> </span><span class="m">0</span>.7<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--size-reduction<span class="w"> </span><span class="m">0</span>.6<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>ADAPTIVE
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="Command Line Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Your Name.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

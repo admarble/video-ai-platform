@@ -1,25 +1,30 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Authentication &mdash; Your Project Name  documentation</title>
+  <title>Authentication &mdash; Cuthrough 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=7fe72933" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Welcome to Documentation" href="../index.html" /> 
+    <link rel="next" title="Developer Guide" href="../developer_guide.html" />
+    <link rel="prev" title="Compression Middleware" href="compression.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +36,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            Your Project Name
+            Cuthrough
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -43,6 +48,122 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#compression-command">Compression Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#analysis-command">Analysis Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#id1">Basic Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#profile-management">Profile Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#creating-profiles">Creating Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#profile-options">Profile Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#common-options">Common Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#basic-compression">Basic Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../compression.html">Compression Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../compression.html#compression-middleware">Compression Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#compression-metrics">Compression Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../compression.html#adaptive-optimization-system">Adaptive Optimization System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#optimization-strategies">Optimization Strategies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression.html#OptimizationStrategy"><code class="docutils literal notranslate"><span class="pre">OptimizationStrategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#target-metrics">Target Metrics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression.html#CompressionMetric"><code class="docutils literal notranslate"><span class="pre">CompressionMetric</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../compression.html#compression-profiles">Compression Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#predefined-profiles">Predefined Profiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression.html#high-quality">1. High Quality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compression.html#balanced">2. Balanced</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compression.html#fast">3. Fast</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#custom-profiles">Custom Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../compression.html#quality-assessment">Quality Assessment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#vmaf-video-multimethod-assessment-fusion">VMAF (Video Multimethod Assessment Fusion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#ssim-structural-similarity-index">SSIM (Structural Similarity Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#custom-quality-scores">Custom Quality Scores</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../compression.html#performance-monitoring">Performance Monitoring</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#real-time-metrics">Real-time Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#progress-tracking">Progress Tracking</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression.html#ProgressTracker"><code class="docutils literal notranslate"><span class="pre">ProgressTracker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../compression.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#quality-focused-compression">1. Quality-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#fast-compression">2. Fast Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#size-focused-compression">3. Size-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression.html#balanced-compression">4. Balanced Compression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#adaptive-compression">Adaptive Compression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#ffmpeg-integration">FFmpeg Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#logging-configuration">Logging Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#main-cli">Main CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#command-handlers">Command Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#helper-functions">Helper Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#type-hints">Type Hints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#creating-a-compression-profile">Creating a Compression Profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#using-the-ffmpeg-processor">Using the FFmpeg Processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#setting-up-logging">Setting Up Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compression.html">Compression Middleware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#custom-configuration">Custom Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#compression-methods">Compression Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#metrics-and-monitoring">Metrics and Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#headers-handling">Headers Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#future-enhancements">Future Enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Authentication</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
@@ -63,6 +184,33 @@
 <li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer_guide.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#setting-up-development-environment">Setting Up Development Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer_guide.html#system-architecture">System Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#component-overview">Component Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#component-interaction">Component Interaction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer_guide.html#contributing-guidelines">Contributing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#code-style">Code Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#commit-message-format">Commit Message Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer_guide.html#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer_guide.html#debugging-tips">Debugging Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#using-debug-mode">Using Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#using-the-debugger">Using the Debugger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer_guide.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -71,11 +219,11 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Your Project Name</a>
+          <a href="../index.html">Cuthrough</a>
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
@@ -83,17 +231,20 @@
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/core/authentication.rst.txt" rel="nofollow"> View page source</a>
       </li>
-  </ul>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="compression.html" class="btn btn-neutral float-left" title="Compression Middleware" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../developer_guide.html" class="btn btn-neutral float-right" title="Developer Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
   <section id="authentication">
-<h1>Authentication<a class="headerlink" href="#authentication" title="Permalink to this heading"></a></h1>
+<h1>Authentication<a class="headerlink" href="#authentication" title="Link to this heading"></a></h1>
 <p>The video processing platform uses a secure, role-based authentication system that provides user management, token-based authentication, and fine-grained access control.</p>
 <section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h2>
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Role-based access control (Admin, Operator, Viewer)</p></li>
 <li><p>JWT (JSON Web Token) based authentication</p></li>
@@ -104,7 +255,7 @@
 </ul>
 </section>
 <section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
 <p>Create a configuration file (e.g. <code class="docutils literal notranslate"><span class="pre">config.json</span></code>) with the following settings:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;jwt_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-secret-key&quot;</span><span class="p">,</span>
@@ -117,9 +268,9 @@
 </div>
 </section>
 <section id="usage-examples">
-<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this heading"></a></h2>
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading"></a></h2>
 <section id="initialize-authentication-manager">
-<h3>Initialize Authentication Manager<a class="headerlink" href="#initialize-authentication-manager" title="Permalink to this heading"></a></h3>
+<h3>Initialize Authentication Manager<a class="headerlink" href="#initialize-authentication-manager" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">auth.auth_manager</span> <span class="kn">import</span> <span class="n">create_auth_manager</span><span class="p">,</span> <span class="n">UserRole</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
@@ -128,9 +279,9 @@
 </div>
 </section>
 <section id="user-management">
-<h3>User Management<a class="headerlink" href="#user-management" title="Permalink to this heading"></a></h3>
+<h3>User Management<a class="headerlink" href="#user-management" title="Link to this heading"></a></h3>
 <section id="create-a-new-user">
-<h4>Create a New User<a class="headerlink" href="#create-a-new-user" title="Permalink to this heading"></a></h4>
+<h4>Create a New User<a class="headerlink" href="#create-a-new-user" title="Link to this heading"></a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
     <span class="n">username</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
     <span class="n">password</span><span class="o">=</span><span class="s2">&quot;SecurePass123!&quot;</span><span class="p">,</span>
@@ -140,7 +291,7 @@
 </div>
 </section>
 <section id="user-authentication">
-<h4>User Authentication<a class="headerlink" href="#user-authentication" title="Permalink to this heading"></a></h4>
+<h4>User Authentication<a class="headerlink" href="#user-authentication" title="Link to this heading"></a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">access_token</span><span class="p">,</span> <span class="n">refresh_token</span> <span class="o">=</span> <span class="n">auth_manager</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span>
     <span class="n">username</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
     <span class="n">password</span><span class="o">=</span><span class="s2">&quot;SecurePass123!&quot;</span>
@@ -149,19 +300,19 @@
 </div>
 </section>
 <section id="token-refresh">
-<h4>Token Refresh<a class="headerlink" href="#token-refresh" title="Permalink to this heading"></a></h4>
+<h4>Token Refresh<a class="headerlink" href="#token-refresh" title="Link to this heading"></a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_access_token</span> <span class="o">=</span> <span class="n">auth_manager</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="n">refresh_token</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="permission-checking">
-<h4>Permission Checking<a class="headerlink" href="#permission-checking" title="Permalink to this heading"></a></h4>
+<h4>Permission Checking<a class="headerlink" href="#permission-checking" title="Link to this heading"></a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">check_permission</span><span class="p">(</span><span class="n">access_token</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">UserRole</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="password-management">
-<h4>Password Management<a class="headerlink" href="#password-management" title="Permalink to this heading"></a></h4>
+<h4>Password Management<a class="headerlink" href="#password-management" title="Link to this heading"></a></h4>
 <p>Change Password:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">change_password</span><span class="p">(</span>
     <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
@@ -180,7 +331,7 @@
 </div>
 </section>
 <section id="user-account-management">
-<h4>User Account Management<a class="headerlink" href="#user-account-management" title="Permalink to this heading"></a></h4>
+<h4>User Account Management<a class="headerlink" href="#user-account-management" title="Link to this heading"></a></h4>
 <p>Deactivate User (Admin only):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth_manager</span><span class="o">.</span><span class="n">deactivate_user</span><span class="p">(</span>
     <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
@@ -199,7 +350,7 @@
 </section>
 </section>
 <section id="security-features">
-<h2>Security Features<a class="headerlink" href="#security-features" title="Permalink to this heading"></a></h2>
+<h2>Security Features<a class="headerlink" href="#security-features" title="Link to this heading"></a></h2>
 <p>Passwords must meet the following requirements:</p>
 <ul class="simple">
 <li><p>Minimum length of 8 characters (configurable)</p></li>
@@ -208,6 +359,42 @@
 <li><p>At least one digit</p></li>
 <li><p>At least one special character (!&#64;#$%^&amp;*(),.?”:{}|&lt;&gt;)</p></li>
 </ul>
+<p>The system implements several layers of brute force protection:</p>
+<ul class="simple">
+<li><p>Failed Login Tracking: Tracks the number of failed login attempts per user</p></li>
+<li><p>Account Lockout: Requires CAPTCHA verification after 3 failed attempts within 5 minutes</p></li>
+<li><p>IP-based Rate Limiting: Limits the number of requests from an IP address</p></li>
+<li><p>CAPTCHA Integration: reCAPTCHA v2 integration for additional security</p></li>
+</ul>
+<p>To set up CAPTCHA protection:</p>
+<ol class="arabic simple">
+<li><p>Sign up for reCAPTCHA at <a class="reference external" href="https://www.google.com/recaptcha">https://www.google.com/recaptcha</a></p></li>
+<li><p>Add your site and get API keys</p></li>
+<li><p>Configure the keys in config.json:</p></li>
+</ol>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;recaptcha_secret_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-secret-key&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;recaptcha_site_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-site-key&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Add the reCAPTCHA widget to your login form:</p></li>
+</ol>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://www.google.com/recaptcha/api.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;g-recaptcha&quot;</span> <span class="na">data-sitekey</span><span class="o">=</span><span class="s">&quot;your-site-key&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Pass the CAPTCHA response to the authentication call:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">access_token</span><span class="p">,</span> <span class="n">refresh_token</span> <span class="o">=</span> <span class="n">auth_manager</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
+    <span class="n">captcha_response</span><span class="o">=</span><span class="n">g_recaptcha_response</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <p>The system uses a dual-token approach:</p>
 <ul class="simple">
 <li><p>Access Token: Short-lived token (default 1 hour) for API access</p></li>
@@ -221,7 +408,7 @@
 </ol>
 </section>
 <section id="error-handling">
-<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading"></a></h2>
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
 <p>The system defines several error types:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">AuthError</span></code>: Base authentication error</p></li>
@@ -245,13 +432,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compression.html" class="btn btn-neutral float-left" title="Compression Middleware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../developer_guide.html" class="btn btn-neutral float-right" title="Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024.</p>
+    <p>&#169; Copyright 2024, Your Name.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

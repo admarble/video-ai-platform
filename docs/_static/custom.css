@@ -1,0 +1,48 @@
+/* Custom styles for documentation */
+.wy-nav-content {
+    max-width: 1000px !important;
+}
+
+.wy-side-nav-search {
+    background-color: #2980B9;
+}
+
+.wy-nav-side {
+    background: #343131;
+}
+
+/* Code block styling */
+div[class^='highlight'] pre {
+    padding: 12px 12px;
+    line-height: 1.5;
+    border: 1px solid #e1e4e5;
+    border-radius: 4px;
+}
+
+/* Improve table styling */
+.wy-table-responsive table td {
+    white-space: normal !important;
+}
+
+.wy-table-responsive {
+    overflow: visible !important;
+}
+
+/* Better admonition styling */
+.admonition {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+}
+
+.admonition-title {
+    margin: -12px -12px 12px !important;
+    padding: 6px 12px !important;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Improve heading hierarchy visibility */
+h1 { font-size: 200%; }
+h2 { font-size: 160%; }
+h3 { font-size: 130%; }
+h4 { font-size: 110%; } 

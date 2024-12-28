@@ -32,6 +32,10 @@ Features
   - XSS protection
   - CSP management
   - WebSocket security
+- Error handling and reliability
+  - Retry mechanisms
+  - Failure tracking
+  - Task monitoring
 
 Quick Installation
 ----------------

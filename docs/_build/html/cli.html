@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command Line Interface &mdash; Cuthrough 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7fe72933" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Compression Features" href="compression.html" />
+    <link rel="prev" title="Welcome to Cuthrough’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cuthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#compression-command">Compression Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-command">Analysis Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Basic Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#profile-management">Profile Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-profiles">Creating Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#profile-options">Profile Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#common-options">Common Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-compression">Basic Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compression.html">Compression Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#compression-middleware">Compression Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#compression-metrics">Compression Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#adaptive-optimization-system">Adaptive Optimization System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#optimization-strategies">Optimization Strategies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="compression.html#OptimizationStrategy"><code class="docutils literal notranslate"><span class="pre">OptimizationStrategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#target-metrics">Target Metrics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="compression.html#CompressionMetric"><code class="docutils literal notranslate"><span class="pre">CompressionMetric</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#compression-profiles">Compression Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#predefined-profiles">Predefined Profiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="compression.html#high-quality">1. High Quality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compression.html#balanced">2. Balanced</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compression.html#fast">3. Fast</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#custom-profiles">Custom Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#quality-assessment">Quality Assessment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#vmaf-video-multimethod-assessment-fusion">VMAF (Video Multimethod Assessment Fusion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#ssim-structural-similarity-index">SSIM (Structural Similarity Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#custom-quality-scores">Custom Quality Scores</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#performance-monitoring">Performance Monitoring</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#real-time-metrics">Real-time Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#progress-tracking">Progress Tracking</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="compression.html#ProgressTracker"><code class="docutils literal notranslate"><span class="pre">ProgressTracker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#quality-focused-compression">1. Quality-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#fast-compression">2. Fast Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#size-focused-compression">3. Size-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression.html#balanced-compression">4. Balanced Compression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#adaptive-compression">Adaptive Compression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ffmpeg-integration">FFmpeg Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#logging-configuration">Logging Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#main-cli">Main CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#command-handlers">Command Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#helper-functions">Helper Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#type-hints">Type Hints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#creating-a-compression-profile">Creating a Compression Profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#using-the-ffmpeg-processor">Using the FFmpeg Processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#setting-up-logging">Setting Up Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/compression.html">Compression Middleware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#custom-configuration">Custom Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#compression-methods">Compression Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#metrics-and-monitoring">Metrics and Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#headers-handling">Headers Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#future-enhancements">Future Enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/authentication.html">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/authentication.html#initialize-authentication-manager">Initialize Authentication Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core/authentication.html#user-management">User Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#create-a-new-user">Create a New User</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#user-authentication">User Authentication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#token-refresh">Token Refresh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#permission-checking">Permission Checking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#password-management">Password Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/authentication.html#user-account-management">User Account Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#security-features">Security Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/authentication.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#setting-up-development-environment">Setting Up Development Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#system-architecture">System Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#component-overview">Component Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#component-interaction">Component Interaction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#contributing-guidelines">Contributing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#code-style">Code Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#commit-message-format">Commit Message Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer_guide.html#debugging-tips">Debugging Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#using-debug-mode">Using Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#using-the-debugger">Using the Debugger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_guide.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cuthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Command Line Interface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Cuthrough’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compression.html" class="btn btn-neutral float-right" title="Compression Features" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="command-line-interface">
+<h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading"></a></h1>
+<p>Cuthrough provides a powerful command-line interface with three main commands: <code class="docutils literal notranslate"><span class="pre">compress</span></code>, <code class="docutils literal notranslate"><span class="pre">analyze</span></code>, and <code class="docutils literal notranslate"><span class="pre">profile</span></code>.</p>
+<section id="compression-command">
+<h2>Compression Command<a class="headerlink" href="#compression-command" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compress</span></code> command is used to compress video files with various optimization options.</p>
+<section id="basic-usage">
+<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4
+
+<span class="c1"># With quality settings</span>
+cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--speed<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--size-reduction<span class="w"> </span><span class="m">0</span>.6
+
+<span class="c1"># Using a profile</span>
+cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--profile<span class="w"> </span>high_quality.json
+</pre></div>
+</div>
+</section>
+<section id="options">
+<h3>Options<a class="headerlink" href="#options" title="Link to this heading"></a></h3>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-quality">
+<span class="sig-name descname"><span class="pre">--quality</span></span><span class="sig-prename descclassname"> <span class="pre">FLOAT</span></span><a class="headerlink" href="#cmdoption-quality" title="Link to this definition"></a></dt>
+<dd><p>Target quality (0-1), default: 0.8</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-speed">
+<span class="sig-name descname"><span class="pre">--speed</span></span><span class="sig-prename descclassname"> <span class="pre">FLOAT</span></span><a class="headerlink" href="#cmdoption-speed" title="Link to this definition"></a></dt>
+<dd><p>Target speed (0-1), default: 0.6</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-size-reduction">
+<span class="sig-name descname"><span class="pre">--size-reduction</span></span><span class="sig-prename descclassname"> <span class="pre">FLOAT</span></span><a class="headerlink" href="#cmdoption-size-reduction" title="Link to this definition"></a></dt>
+<dd><p>Target size reduction (0-1), default: 0.7</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-profile">
+<span class="sig-name descname"><span class="pre">--profile</span></span><span class="sig-prename descclassname"> <span class="pre">PATH</span></span><a class="headerlink" href="#cmdoption-profile" title="Link to this definition"></a></dt>
+<dd><p>Path to compression profile JSON</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-optimization-strategy">
+<span class="sig-name descname"><span class="pre">--optimization-strategy</span></span><span class="sig-prename descclassname"> <span class="pre">{SIMPLE,GRADIENT,ADAPTIVE,WEIGHTED}</span></span><a class="headerlink" href="#cmdoption-optimization-strategy" title="Link to this definition"></a></dt>
+<dd><p>Optimization strategy to use</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-learning-rate">
+<span class="sig-name descname"><span class="pre">--learning-rate</span></span><span class="sig-prename descclassname"> <span class="pre">FLOAT</span></span><a class="headerlink" href="#cmdoption-learning-rate" title="Link to this definition"></a></dt>
+<dd><p>Learning rate for optimization</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-history-weight">
+<span class="sig-name descname"><span class="pre">--history-weight</span></span><span class="sig-prename descclassname"> <span class="pre">FLOAT</span></span><a class="headerlink" href="#cmdoption-history-weight" title="Link to this definition"></a></dt>
+<dd><p>Weight decay for historical performance</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-save-metrics">
+<span class="sig-name descname"><span class="pre">--save-metrics</span></span><span class="sig-prename descclassname"> <span class="pre">PATH</span></span><a class="headerlink" href="#cmdoption-save-metrics" title="Link to this definition"></a></dt>
+<dd><p>Save compression metrics to JSON file</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="analysis-command">
+<h2>Analysis Command<a class="headerlink" href="#analysis-command" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze</span></code> command provides detailed information about video files.</p>
+<section id="id1">
+<h3>Basic Usage<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>analyze<span class="w"> </span>input.mp4
+cuthrough<span class="w"> </span>analyze<span class="w"> </span>input.mp4<span class="w"> </span>--json
+</pre></div>
+</div>
+<p>Output includes:</p>
+<ul class="simple">
+<li><p>Resolution</p></li>
+<li><p>Duration</p></li>
+<li><p>Frame rate</p></li>
+<li><p>Bitrate</p></li>
+<li><p>File size</p></li>
+<li><p>Container format</p></li>
+<li><p>Audio presence</p></li>
+</ul>
+</section>
+</section>
+<section id="profile-management">
+<h2>Profile Management<a class="headerlink" href="#profile-management" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">profile</span></code> command helps manage compression profiles.</p>
+<section id="creating-profiles">
+<h3>Creating Profiles<a class="headerlink" href="#creating-profiles" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cuthrough<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>high_quality.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;High Quality&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-codec<span class="w"> </span>libx264<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--preset<span class="w"> </span>veryslow<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality-value<span class="w"> </span><span class="m">18</span>
+</pre></div>
+</div>
+</section>
+<section id="profile-options">
+<h3>Profile Options<a class="headerlink" href="#profile-options" title="Link to this heading"></a></h3>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-name">
+<span class="sig-name descname"><span class="pre">--name</span></span><span class="sig-prename descclassname"> <span class="pre">NAME</span></span><a class="headerlink" href="#cmdoption-name" title="Link to this definition"></a></dt>
+<dd><p>Profile name</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-video-codec">
+<span class="sig-name descname"><span class="pre">--video-codec</span></span><span class="sig-prename descclassname"> <span class="pre">CODEC</span></span><a class="headerlink" href="#cmdoption-video-codec" title="Link to this definition"></a></dt>
+<dd><p>Video codec (e.g., libx264, libx265, libvpx-vp9)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-audio-codec">
+<span class="sig-name descname"><span class="pre">--audio-codec</span></span><span class="sig-prename descclassname"> <span class="pre">CODEC</span></span><a class="headerlink" href="#cmdoption-audio-codec" title="Link to this definition"></a></dt>
+<dd><p>Audio codec (e.g., aac, opus)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-container">
+<span class="sig-name descname"><span class="pre">--container</span></span><span class="sig-prename descclassname"> <span class="pre">FORMAT</span></span><a class="headerlink" href="#cmdoption-container" title="Link to this definition"></a></dt>
+<dd><p>Container format (e.g., mp4, mkv, webm)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-preset">
+<span class="sig-name descname"><span class="pre">--preset</span></span><span class="sig-prename descclassname"> <span class="pre">PRESET</span></span><a class="headerlink" href="#cmdoption-preset" title="Link to this definition"></a></dt>
+<dd><p>Encoder preset (e.g., ultrafast, medium, veryslow)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-video-bitrate">
+<span class="sig-name descname"><span class="pre">--video-bitrate</span></span><span class="sig-prename descclassname"> <span class="pre">RATE</span></span><a class="headerlink" href="#cmdoption-video-bitrate" title="Link to this definition"></a></dt>
+<dd><p>Video bitrate (e.g., 2M, 5M)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-audio-bitrate">
+<span class="sig-name descname"><span class="pre">--audio-bitrate</span></span><span class="sig-prename descclassname"> <span class="pre">RATE</span></span><a class="headerlink" href="#cmdoption-audio-bitrate" title="Link to this definition"></a></dt>
+<dd><p>Audio bitrate (e.g., 128k, 192k)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-quality-value">
+<span class="sig-name descname"><span class="pre">--quality-value</span></span><span class="sig-prename descclassname"> <span class="pre">INT</span></span><a class="headerlink" href="#cmdoption-quality-value" title="Link to this definition"></a></dt>
+<dd><p>Quality value (e.g., CRF value)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-multipass">
+<span class="sig-name descname"><span class="pre">--multipass</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-multipass" title="Link to this definition"></a></dt>
+<dd><p>Enable multipass encoding</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="common-options">
+<h2>Common Options<a class="headerlink" href="#common-options" title="Link to this heading"></a></h2>
+<p>These options are available for all commands:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-debug">
+<span class="sig-name descname"><span class="pre">--debug</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-debug" title="Link to this definition"></a></dt>
+<dd><p>Enable debug logging</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-log-file">
+<span class="sig-name descname"><span class="pre">--log-file</span></span><span class="sig-prename descclassname"> <span class="pre">PATH</span></span><a class="headerlink" href="#cmdoption-log-file" title="Link to this definition"></a></dt>
+<dd><p>Log to file</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-quiet">
+<span class="sig-name descname"><span class="pre">--quiet</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-quiet" title="Link to this definition"></a></dt>
+<dd><p>Suppress progress output</p>
+</dd></dl>
+
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="basic-compression">
+<h3>Basic Compression<a class="headerlink" href="#basic-compression" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quick compression</span>
+cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4
+
+<span class="c1"># High-quality compression</span>
+cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--quality<span class="w"> </span><span class="m">0</span>.95<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--optimization-strategy<span class="w"> </span>ADAPTIVE
+</pre></div>
+</div>
+</section>
+<section id="advanced-usage">
+<h3>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a custom profile</span>
+cuthrough<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>custom.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;Custom 4K&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-codec<span class="w"> </span>libx265<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--preset<span class="w"> </span>slow<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--video-bitrate<span class="w"> </span>8M<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--multipass
+
+<span class="c1"># Analyze input video</span>
+cuthrough<span class="w"> </span>analyze<span class="w"> </span>input.mp4<span class="w"> </span>--json<span class="w"> </span>&gt;<span class="w"> </span>analysis.json
+
+<span class="c1"># Compress with custom profile and save metrics</span>
+cuthrough<span class="w"> </span>compress<span class="w"> </span>input.mp4<span class="w"> </span>output.mp4<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--profile<span class="w"> </span>custom.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--save-metrics<span class="w"> </span>metrics.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--debug<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--log-file<span class="w"> </span>compression.log
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Cuthrough’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compression.html" class="btn btn-neutral float-right" title="Compression Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Your Name.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

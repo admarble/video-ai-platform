@@ -1,0 +1,487 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dead Letter Queue System &mdash; Cuthrough 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7fe72933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Cuthrough
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cli.html#compression-command">Compression Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cli.html#analysis-command">Analysis Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#id1">Basic Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cli.html#profile-management">Profile Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#creating-profiles">Creating Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#profile-options">Profile Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cli.html#common-options">Common Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cli.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#basic-compression">Basic Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../compression.html">Compression Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../compression.html#compression-middleware">Compression Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#compression-metrics">Compression Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../compression.html#adaptive-optimization-system">Adaptive Optimization System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#optimization-strategies">Optimization Strategies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../compression.html#OptimizationStrategy"><code class="docutils literal notranslate"><span class="pre">OptimizationStrategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#target-metrics">Target Metrics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../compression.html#CompressionMetric"><code class="docutils literal notranslate"><span class="pre">CompressionMetric</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../compression.html#compression-profiles">Compression Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#predefined-profiles">Predefined Profiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../compression.html#high-quality">1. High Quality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../compression.html#balanced">2. Balanced</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../compression.html#fast">3. Fast</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#custom-profiles">Custom Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../compression.html#quality-assessment">Quality Assessment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#vmaf-video-multimethod-assessment-fusion">VMAF (Video Multimethod Assessment Fusion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#ssim-structural-similarity-index">SSIM (Structural Similarity Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#custom-quality-scores">Custom Quality Scores</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../compression.html#performance-monitoring">Performance Monitoring</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#real-time-metrics">Real-time Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#progress-tracking">Progress Tracking</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../compression.html#ProgressTracker"><code class="docutils literal notranslate"><span class="pre">ProgressTracker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../compression.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#quality-focused-compression">1. Quality-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#fast-compression">2. Fast Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#size-focused-compression">3. Size-Focused Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compression.html#balanced-compression">4. Balanced Compression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#adaptive-compression">Adaptive Compression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#ffmpeg-integration">FFmpeg Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#logging-configuration">Logging Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#main-cli">Main CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#command-handlers">Command Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#helper-functions">Helper Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#type-hints">Type Hints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#creating-a-compression-profile">Creating a Compression Profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#using-the-ffmpeg-processor">Using the FFmpeg Processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#setting-up-logging">Setting Up Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../core/compression.html">Compression Middleware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#custom-configuration">Custom Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#streaming-support">Streaming Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#compression-methods">Compression Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#metrics-and-monitoring">Metrics and Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#headers-handling">Headers Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#future-enhancements">Future Enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/compression.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../core/authentication.html">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../core/authentication.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/authentication.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/authentication.html#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../core/authentication.html#initialize-authentication-manager">Initialize Authentication Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core/authentication.html#user-management">User Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../core/authentication.html#create-a-new-user">Create a New User</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../core/authentication.html#user-authentication">User Authentication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../core/authentication.html#token-refresh">Token Refresh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../core/authentication.html#permission-checking">Permission Checking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../core/authentication.html#password-management">Password Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../core/authentication.html#user-account-management">User Account Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/authentication.html#security-features">Security Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/authentication.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../developer_guide.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#setting-up-development-environment">Setting Up Development Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer_guide.html#system-architecture">System Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#component-overview">Component Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#component-interaction">Component Interaction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer_guide.html#contributing-guidelines">Contributing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#code-style">Code Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#commit-message-format">Commit Message Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer_guide.html#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer_guide.html#debugging-tips">Debugging Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#using-debug-mode">Using Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#using-the-debugger">Using the Debugger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../developer_guide.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cuthrough</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Dead Letter Queue System</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/internal/core/dead_letter_queue.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dead-letter-queue-system">
+<h1>Dead Letter Queue System<a class="headerlink" href="#dead-letter-queue-system" title="Link to this heading"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This documentation is for internal use only. It contains implementation details that should not be exposed publicly.</p>
+</div>
+<p>The Dead Letter Queue (DLQ) system provides robust error handling and retry mechanisms for failed video processing tasks. It uses Redis as a backend store and supports configurable retry policies, task tracking, and comprehensive monitoring.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Redis-backed persistent storage</p></li>
+<li><p>Configurable retry intervals and policies</p></li>
+<li><p>Automatic task cleanup</p></li>
+<li><p>Comprehensive failure tracking</p></li>
+<li><p>Statistical monitoring</p></li>
+<li><p>Async/await support</p></li>
+</ul>
+</section>
+<section id="components">
+<h2>Components<a class="headerlink" href="#components" title="Link to this heading"></a></h2>
+<section id="failurereason">
+<h3>FailureReason<a class="headerlink" href="#failurereason" title="Link to this heading"></a></h3>
+<p>An enumeration of possible failure types:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FailureReason</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">CORRUPTED_VIDEO</span> <span class="o">=</span> <span class="s2">&quot;corrupted_video&quot;</span>
+    <span class="n">INVALID_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;invalid_format&quot;</span>
+    <span class="n">PROCESSING_ERROR</span> <span class="o">=</span> <span class="s2">&quot;processing_error&quot;</span>
+    <span class="n">RESOURCE_EXHAUSTED</span> <span class="o">=</span> <span class="s2">&quot;resource_exhausted&quot;</span>
+    <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="s2">&quot;timeout&quot;</span>
+    <span class="n">MODEL_ERROR</span> <span class="o">=</span> <span class="s2">&quot;model_error&quot;</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="failedtask">
+<h3>FailedTask<a class="headerlink" href="#failedtask" title="Link to this heading"></a></h3>
+<p>A dataclass representing a failed processing task:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">FailedTask</span><span class="p">:</span>
+    <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">failure_reason</span><span class="p">:</span> <span class="n">FailureReason</span>
+    <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">retry_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">last_retry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading"></a></h2>
+<section id="redis-schema">
+<h3>Redis Schema<a class="headerlink" href="#redis-schema" title="Link to this heading"></a></h3>
+<p>The DLQ uses the following Redis keys and data structures:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">video_processing:failed_tasks</span></code> (Hash): Stores failed task details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">video_processing:retry_queue</span></code> (Sorted Set): Manages retry scheduling</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>The DLQ system supports several configuration options:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DeadLetterQueue</span><span class="p">(</span>
+    <span class="n">redis_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">retry_intervals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">3600</span><span class="p">],</span>  <span class="c1"># 5min, 15min, 1hour</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">failure_ttl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">604800</span>  <span class="c1"># 7 days</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_intervals</span></code>: List of intervals (in seconds) between retry attempts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries</span></code>: Maximum number of retry attempts per task</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">failure_ttl</span></code>: Time-to-live for failed tasks in seconds</p></li>
+</ul>
+</section>
+</section>
+<section id="monitoring-and-statistics">
+<h2>Monitoring and Statistics<a class="headerlink" href="#monitoring-and-statistics" title="Link to this heading"></a></h2>
+<p>The DLQ system provides comprehensive monitoring capabilities:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get DLQ statistics</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="k">await</span> <span class="n">dlq</span><span class="o">.</span><span class="n">get_failed_task_stats</span><span class="p">()</span>
+
+<span class="c1"># Example stats output:</span>
+<span class="p">{</span>
+    <span class="s1">&#39;total_tasks&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;failure_reasons&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;corrupted_video&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s1">&#39;processing_error&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s1">&#39;timeout&#39;</span><span class="p">:</span> <span class="mi">30</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;retry_stats&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;pending_retries&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+        <span class="s1">&#39;max_retries_reached&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s1">&#39;avg_retries&#39;</span><span class="p">:</span> <span class="mf">1.5</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cleanup-and-maintenance">
+<h2>Cleanup and Maintenance<a class="headerlink" href="#cleanup-and-maintenance" title="Link to this heading"></a></h2>
+<p>The system includes automatic cleanup of old tasks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clean up tasks older than 7 days</span>
+<span class="k">await</span> <span class="n">dlq</span><span class="o">.</span><span class="n">cleanup_old_tasks</span><span class="p">(</span><span class="n">max_age</span><span class="o">=</span><span class="mi">604800</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Error Classification</strong>
+- Properly categorize errors using appropriate <code class="docutils literal notranslate"><span class="pre">FailureReason</span></code> values
+- Include detailed error messages for debugging</p></li>
+<li><p><strong>Retry Intervals</strong>
+- Use exponential backoff for retry intervals
+- Consider resource availability when setting intervals</p></li>
+<li><p><strong>Monitoring</strong>
+- Regularly check DLQ statistics
+- Set up alerts for tasks reaching max retries
+- Monitor retry success rates</p></li>
+<li><p><strong>Resource Management</strong>
+- Implement cleanup routines for old tasks
+- Set appropriate TTL values based on business needs</p></li>
+<li><p><strong>Retry Handlers</strong>
+- Implement idempotent retry handlers
+- Include proper error handling in retry logic
+- Log retry attempts and outcomes</p></li>
+</ol>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
+<p>The DLQ system provides comprehensive error handling:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Your processing code</span>
+    <span class="n">process_video</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="c1"># Create and add failed task</span>
+    <span class="n">failed_task</span> <span class="o">=</span> <span class="n">FailedTask</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span>
+        <span class="n">video_path</span><span class="o">=</span><span class="n">video_path</span><span class="p">,</span>
+        <span class="n">failure_reason</span><span class="o">=</span><span class="n">FailureReason</span><span class="o">.</span><span class="n">PROCESSING_ERROR</span><span class="p">,</span>
+        <span class="n">error_message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="n">timestamp</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">await</span> <span class="n">dlq</span><span class="o">.</span><span class="n">add_failed_task</span><span class="p">(</span><span class="n">failed_task</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<section id="deadletterqueue">
+<h3>DeadLetterQueue<a class="headerlink" href="#deadletterqueue" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="DeadLetterQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DeadLetterQueue</span></span><a class="headerlink" href="#DeadLetterQueue" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueue.add_failed_task">
+<span class="sig-name descname"><span class="pre">add_failed_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FailedTask</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DeadLetterQueue.add_failed_task" title="Link to this definition"></a></dt>
+<dd><p>Add a failed task to the DLQ.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueue.get_failed_task">
+<span class="sig-name descname"><span class="pre">get_failed_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FailedTask</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#DeadLetterQueue.get_failed_task" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a specific failed task by ID.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueue.get_tasks_for_retry">
+<span class="sig-name descname"><span class="pre">get_tasks_for_retry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">FailedTask</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#DeadLetterQueue.get_tasks_for_retry" title="Link to this definition"></a></dt>
+<dd><p>Get all tasks that are ready for retry.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueue.retry_task">
+<span class="sig-name descname"><span class="pre">retry_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FailedTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#DeadLetterQueue.retry_task" title="Link to this definition"></a></dt>
+<dd><p>Attempt to retry a failed task.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueue.get_failed_task_stats">
+<span class="sig-name descname"><span class="pre">get_failed_task_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#DeadLetterQueue.get_failed_task_stats" title="Link to this definition"></a></dt>
+<dd><p>Get statistics about failed tasks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueue.cleanup_old_tasks">
+<span class="sig-name descname"><span class="pre">cleanup_old_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_age</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">604800</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DeadLetterQueue.cleanup_old_tasks" title="Link to this definition"></a></dt>
+<dd><p>Remove tasks older than max_age seconds.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="deadletterqueuemanager">
+<h3>DeadLetterQueueManager<a class="headerlink" href="#deadletterqueuemanager" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="DeadLetterQueueManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DeadLetterQueueManager</span></span><a class="headerlink" href="#DeadLetterQueueManager" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueueManager.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DeadLetterQueueManager.start" title="Link to this definition"></a></dt>
+<dd><p>Start the DLQ manager and retry processing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DeadLetterQueueManager.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DeadLetterQueueManager.stop" title="Link to this definition"></a></dt>
+<dd><p>Stop the DLQ manager and retry processing.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Your Name.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

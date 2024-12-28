@@ -1,0 +1,67 @@
+vector_store:
+  type: "chromadb"
+  path: "./data/vectors"
+  settings:
+    chroma_db_impl: "duckdb+parquet"
+    hnsw:
+      space: "cosine"
+      ef_construction: 200
+      m: 16
+
+llm:
+  type: "mistral"
+  model: "mistral-7b"
+  endpoint: "http://localhost:11434"
+  settings:
+    temperature: 0.7
+    max_tokens: 500
+    top_p: 0.95
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+
+clip_generator:
+  temp_dir: "./temp/clips"
+  max_concurrent: 5
+  settings:
+    format: "mp4"
+    video_codec: "h264"
+    audio_codec: "aac"
+    preset: "fast"
+    crf: 23
+
+scene_processor:
+  min_scene_duration: 2.0
+  max_scene_duration: 60.0
+  settings:
+    motion_threshold: 0.3
+    complexity_threshold: 0.5
+    color_palette_size: 5
+
+cache:
+  type: "redis"
+  url: "redis://localhost:6379"
+  settings:
+    ttl: 3600
+    max_memory: "1gb"
+    eviction_policy: "allkeys-lru"
+
+monitoring:
+  metrics:
+    - name: "rag_search_latency"
+      type: "histogram"
+      description: "RAG search latency in seconds"
+    - name: "rag_index_count"
+      type: "counter"
+      description: "Number of scenes indexed in RAG"
+    - name: "clip_generation_duration"
+      type: "histogram"
+      description: "Clip generation duration in seconds"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    file:
+      path: "./logs/rag.log"
+      max_bytes: 10485760
+      backup_count: 5

@@ -15,6 +15,7 @@ from dataclasses import dataclass
 import os
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
+from src.core.logging import LoggingManager, LogLevel
 
 @dataclass
 class ModelVersion:
@@ -99,7 +100,18 @@ class ServiceManager:
         self._lock = threading.Lock()
         self._initialization_status = {}
         self._resource_monitor = ResourceMonitor()
-        self.logger = VideoProcessingLogger()
+        
+        # Initialize logging manager
+        self.logging_manager = LoggingManager(
+            base_dir=Path(__file__).parent.parent.parent,
+            config={
+                "system": {
+                    "level": "INFO",
+                    "format": "%(asctime)s - %(name)s - [%(levelname)s] %(message)s"
+                }
+            }
+        )
+        self.logger = self.logging_manager.get_logger("system")
         self.error_handler = ErrorHandler(self.logger)
         self.model_cache = {}
         self.model_versions: Dict[str, ModelVersion] = {}
@@ -124,7 +136,7 @@ class ServiceManager:
                     service.cleanup()
                 except Exception as e:
                     cleanup_errors.append((service_name, str(e)))
-                    logging.error(f"Failed to cleanup service '{service_name}': {str(e)}")
+                    self.logger.error(f"Failed to cleanup service '{service_name}': {str(e)}")
                     
         # Clear internal dictionaries
         self._services.clear()

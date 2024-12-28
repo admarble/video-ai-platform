@@ -1,5 +1,4 @@
 from pathlib import Path
-import logging
 from typing import Dict, Optional, List, Any, Union
 from dataclasses import dataclass
 import json
@@ -11,6 +10,7 @@ import shutil
 from src.services.service_manager import ServiceManager, ModelConfig
 from src.exceptions import VideoProcessingError, ServiceInitializationError
 from src.core.config import get_config
+from src.core.logging import LoggingManager, LogLevel
 
 @dataclass
 class VideoMetadata:
@@ -65,7 +65,18 @@ class VideoProcessor:
         self.service_manager = ServiceManager(model_config)
         self.service_manager.initialize_services(parallel=True)
         
-        logging.info("Initialized VideoProcessor")
+        # Initialize logging manager
+        self.logging_manager = LoggingManager(
+            base_dir=Path(__file__).parent.parent.parent,
+            config={
+                "video_processing": {
+                    "level": "INFO",
+                    "format": "%(asctime)s - [%(levelname)s] %(message)s - %(video_id)s"
+                }
+            }
+        )
+        self.logger = self.logging_manager.get_logger("video_processing")
+        self.logger.info("Initialized VideoProcessor")
         
     def init_video(
         self,
@@ -194,6 +205,11 @@ class VideoProcessor:
             ProcessingResults object with all enabled results
         """
         try:
+            self.logger.info(
+                "Starting video processing",
+                extra={"video_id": video_metadata.video_id}
+            )
+            
             results = ProcessingResults(
                 metadata=video_metadata,
                 scenes=[],
@@ -210,19 +226,28 @@ class VideoProcessor:
                     video_metadata.file_path,
                     sampling_rate=2  # Can be configurable
                 )
-                logging.info(f"Extracted {len(frames)} frames from video")
+                self.logger.info(
+                    f"Extracted {len(frames)} frames from video",
+                    extra={"video_id": video_metadata.video_id}
+                )
                 
             # Scene analysis
             if analyze_scenes and frames is not None:
                 scene_processor = self.service_manager.get_service("scene_processor")
                 results.scenes = scene_processor.process_scenes(frames)
-                logging.info(f"Analyzed {len(results.scenes)} scenes")
+                self.logger.info(
+                    f"Analyzed {len(results.scenes)} scenes",
+                    extra={"video_id": video_metadata.video_id}
+                )
                 
             # Object detection
             if detect_objects and frames is not None:
                 object_detector = self.service_manager.get_service("object_detector")
                 results.objects = object_detector.process_frames(frames)
-                logging.info(f"Detected objects in {len(frames)} frames")
+                self.logger.info(
+                    f"Detected objects in {len(frames)} frames",
+                    extra={"video_id": video_metadata.video_id}
+                )
                 
             # Audio processing
             if process_audio:
@@ -230,13 +255,19 @@ class VideoProcessor:
                 results.audio_segments = audio_processor.process_audio(
                     video_metadata.file_path
                 )
-                logging.info(f"Processed {len(results.audio_segments)} audio segments")
+                self.logger.info(
+                    f"Processed {len(results.audio_segments)} audio segments",
+                    extra={"video_id": video_metadata.video_id}
+                )
                 
             # Generate embeddings
             if generate_embeddings and frames is not None:
                 text_aligner = self.service_manager.get_service("text_aligner")
                 results.frame_embeddings = text_aligner._generate_embeddings(frames)
-                logging.info("Generated frame embeddings")
+                self.logger.info(
+                    "Generated frame embeddings",
+                    extra={"video_id": video_metadata.video_id}
+                )
                 
             # Save results
             self._save_results(video_metadata.video_id, results)
@@ -245,12 +276,23 @@ class VideoProcessor:
             video_metadata.status = "completed"
             self._save_metadata(video_metadata)
             
+            self.logger.info(
+                "Video processing completed successfully",
+                extra={"video_id": video_metadata.video_id}
+            )
+            
             return results
             
         except Exception as e:
             # Update status on failure
             video_metadata.status = "failed"
             self._save_metadata(video_metadata)
+            
+            self.logger.error(
+                f"Failed to process video: {str(e)}",
+                extra={"video_id": video_metadata.video_id},
+                exc_info=True
+            )
             raise VideoProcessingError(f"Failed to process video: {str(e)}")
             
     def _save_results(self, video_id: str, results: ProcessingResults) -> None:
