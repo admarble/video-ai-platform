@@ -59,3 +59,8 @@ Miniforge3-MacOSX-arm64.sh
 get-pip.py
 ~/*.swp
 *.swo
+# Build
+build/
+*.egg-info/
+# Environment
+config/.env

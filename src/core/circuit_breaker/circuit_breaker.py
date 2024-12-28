@@ -1,284 +1,214 @@
-import asyncio
-import json
-import logging
+from enum import Enum
+from typing import Dict, Any, Optional, Callable, Union
 import time
-from typing import Any, Dict, Optional, Callable, TypeVar, Awaitable, List
+import logging
+import threading
 from dataclasses import dataclass
-from functools import wraps
-import uuid
+import asyncio
+from datetime import datetime, timedelta
 
-from .storage import StorageBackend
-from .redis_storage import RedisStorageBackend
-from .etcd_storage import EtcdStorageBackend
-from .consul_storage import ConsulStorageBackend
-from .zookeeper_storage import ZooKeeperStorageBackend
-from .dynamodb_storage import DynamoDBStorageBackend
-from .s3_storage import S3StorageBackend
-from .elasticache_storage import ElastiCacheStorageBackend
-
-logger = logging.getLogger(__name__)
-
-T = TypeVar('T')
+class CircuitState(Enum):
+    """Circuit breaker states"""
+    CLOSED = "closed"      # Normal operation - requests allowed
+    OPEN = "open"         # Failure threshold exceeded - requests blocked
+    HALF_OPEN = "half_open"  # Testing if service is restored
 
 @dataclass
-class CircuitBreakerConfig:
-    failure_threshold: int
-    reset_timeout: int
-    sync_interval: int
-    state_ttl: Optional[int] = None
-    corruption_threshold: Optional[int] = None
-    model_error_threshold: Optional[int] = None
+class CircuitConfig:
+    """Circuit breaker configuration"""
+    failure_threshold: int = 5        # Number of failures before opening
+    reset_timeout: int = 60           # Seconds before attempting reset
+    half_open_limit: int = 3         # Number of requests to test in half-open state
+    window_size: int = 60            # Time window for failure counting (seconds)
+    success_threshold: int = 2       # Successes needed to close circuit
+    exceptions: tuple = (Exception,)  # Exception types to count as failures
 
-class CircuitBreakerState:
-    CLOSED = "closed"
-    OPEN = "open"
-    HALF_OPEN = "half_open"
+class CircuitBreaker:
+    """Implements circuit breaker pattern for video processing"""
+    
+    def __init__(self, name: str, config: CircuitConfig):
+        self.name = name
+        self.config = config
+        self.state = CircuitState.CLOSED
+        self.failure_count = 0
+        self.success_count = 0
+        self.last_failure_time = 0
+        self.last_state_change = time.time()
+        self.half_open_count = 0
+        self.lock = threading.RLock()
+        self.logger = logging.getLogger(__name__)
+        self.failure_timestamps = []
 
-class CircuitBreakerError(Exception):
-    """Exception raised when the circuit breaker prevents an operation."""
-    pass
+    def can_execute(self) -> bool:
+        """Check if request can be executed"""
+        with self.lock:
+            current_time = time.time()
 
-class DistributedCircuitBreaker:
-    def __init__(
+            # Clean up old failure timestamps
+            self._clean_failure_window(current_time)
+
+            if self.state == CircuitState.OPEN:
+                if current_time - self.last_state_change >= self.config.reset_timeout:
+                    self._transition_to_half_open()
+                    return True
+                return False
+                
+            if self.state == CircuitState.HALF_OPEN:
+                return self.half_open_count < self.config.half_open_limit
+                
+            return True
+
+    def record_success(self):
+        """Record successful execution"""
+        with self.lock:
+            if self.state == CircuitState.HALF_OPEN:
+                self.success_count += 1
+                if self.success_count >= self.config.success_threshold:
+                    self._transition_to_closed()
+                else:
+                    self.half_open_count += 1
+
+    def record_failure(self):
+        """Record failed execution"""
+        with self.lock:
+            current_time = time.time()
+            
+            if self.state == CircuitState.HALF_OPEN:
+                self._transition_to_open(current_time)
+                return
+
+            # Add failure timestamp
+            self.failure_timestamps.append(current_time)
+            self._clean_failure_window(current_time)
+
+            # Check if threshold is exceeded
+            if len(self.failure_timestamps) >= self.config.failure_threshold:
+                self._transition_to_open(current_time)
+
+    def _clean_failure_window(self, current_time: float):
+        """Remove failures outside the window"""
+        window_start = current_time - self.config.window_size
+        self.failure_timestamps = [
+            t for t in self.failure_timestamps if t >= window_start
+        ]
+
+    def _transition_to_open(self, current_time: float):
+        """Transition to open state"""
+        self.state = CircuitState.OPEN
+        self.last_state_change = current_time
+        self.logger.warning(
+            f"Circuit {self.name} opened after {len(self.failure_timestamps)} failures"
+        )
+
+    def _transition_to_half_open(self):
+        """Transition to half-open state"""
+        self.state = CircuitState.HALF_OPEN
+        self.last_state_change = time.time()
+        self.success_count = 0
+        self.half_open_count = 0
+        self.logger.info(f"Circuit {self.name} entering half-open state")
+
+    def _transition_to_closed(self):
+        """Transition to closed state"""
+        self.state = CircuitState.CLOSED
+        self.last_state_change = time.time()
+        self.failure_timestamps = []
+        self.success_count = 0
+        self.half_open_count = 0
+        self.logger.info(f"Circuit {self.name} closed after successful tests")
+
+    def get_state(self) -> Dict[str, Any]:
+        """Get current circuit breaker state"""
+        with self.lock:
+            return {
+                'name': self.name,
+                'state': self.state.value,
+                'failure_count': len(self.failure_timestamps),
+                'success_count': self.success_count,
+                'half_open_count': self.half_open_count,
+                'last_failure': datetime.fromtimestamp(self.last_failure_time).isoformat() if self.last_failure_time else None,
+                'last_state_change': datetime.fromtimestamp(self.last_state_change).isoformat()
+            }
+
+class CircuitBreakerRegistry:
+    """Manages multiple circuit breakers"""
+    
+    def __init__(self):
+        self.circuits: Dict[str, CircuitBreaker] = {}
+        self.lock = threading.Lock()
+        self.logger = logging.getLogger(__name__)
+
+    def get_circuit(
         self,
         name: str,
-        storage: StorageBackend,
-        config: CircuitBreakerConfig
-    ):
-        self.name = name
-        self.storage = storage
-        self.config = config
-        self.instance_id = str(uuid.uuid4())
-        self._sync_task: Optional[asyncio.Task] = None
-        self.logger = logging.getLogger(__name__)
-    
-    async def start(self) -> None:
-        """Initialize the circuit breaker and start background sync."""
-        await self.storage.connect()
-        await self.storage.register_instance(self.instance_id, self.config.sync_interval * 2)
-        
-        # Initialize state if not exists
-        state = await self.storage.get_state(f"{self.name}:state")
-        if not state:
-            await self.storage.set_state(
-                f"{self.name}:state",
-                {
-                    "state": CircuitBreakerState.CLOSED,
-                    "failures": 0,
-                    "corruption_count": 0,
-                    "model_error_count": 0,
-                    "success_count": 0,
-                    "last_failure": 0,
-                    "last_success": 0,
-                    "last_updated": int(time.time()),
-                    "instance_id": self.instance_id
-                },
-                ttl=self.config.state_ttl
-            )
-        
-        self._sync_task = asyncio.create_task(self._sync_loop())
-    
-    async def cleanup(self) -> None:
-        """Clean up resources and stop background sync."""
-        if self._sync_task:
-            self._sync_task.cancel()
-            try:
-                await self._sync_task
-            except asyncio.CancelledError:
-                pass
-        
-        await self.storage.unregister_instance(self.instance_id)
-        await self.storage.disconnect()
-    
-    async def get_instances(self) -> List[str]:
-        """Get list of registered circuit breaker instances."""
-        return await self.storage.get_instances(self.name)
-    
-    async def _sync_loop(self) -> None:
-        """Background task to sync circuit breaker state."""
-        while True:
-            try:
-                await asyncio.sleep(self.config.sync_interval)
-                await self.storage.register_instance(
-                    self.instance_id,
-                    self.config.sync_interval * 2
+        config: Optional[CircuitConfig] = None
+    ) -> CircuitBreaker:
+        """Get or create circuit breaker"""
+        with self.lock:
+            if name not in self.circuits:
+                self.circuits[name] = CircuitBreaker(
+                    name,
+                    config or CircuitConfig()
                 )
-                
-                # Check if we should reset to half-open state
-                state_data = await self.storage.get_state(f"{self.name}:state")
-                if state_data and state_data["state"] == CircuitBreakerState.OPEN:
-                    if (time.time() - state_data["last_failure"]) >= self.config.reset_timeout:
-                        await self._try_transition_to_half_open()
+            return self.circuits[name]
+
+    def remove_circuit(self, name: str):
+        """Remove circuit breaker"""
+        with self.lock:
+            if name in self.circuits:
+                del self.circuits[name]
+
+    def get_all_states(self) -> Dict[str, Dict[str, Any]]:
+        """Get states of all circuit breakers"""
+        with self.lock:
+            return {
+                name: circuit.get_state()
+                for name, circuit in self.circuits.items()
+            }
+
+def circuit_breaker(
+    circuit_name: str,
+    registry: CircuitBreakerRegistry,
+    config: Optional[CircuitConfig] = None,
+    fallback: Optional[Callable] = None
+):
+    """Decorator for adding circuit breaker to functions"""
+    def decorator(func):
+        async def async_wrapper(*args, **kwargs):
+            circuit = registry.get_circuit(circuit_name, config)
             
-            except asyncio.CancelledError:
-                break
-            except Exception as e:
-                self.logger.error(f"Error in circuit breaker sync loop: {str(e)}")
-                await asyncio.sleep(1)  # Avoid tight loop on persistent errors
-    
-    async def _try_transition_to_half_open(self) -> None:
-        """Attempt to transition from OPEN to HALF_OPEN state."""
-        lock_acquired = await self.storage.acquire_lock(
-            f"{self.name}:transition_lock",
-            self.instance_id,
-            self.config.sync_interval
-        )
-        
-        if lock_acquired:
-            try:
-                state_data = await self.storage.get_state(f"{self.name}:state")
-                if state_data["state"] == CircuitBreakerState.OPEN:
-                    state_data["state"] = CircuitBreakerState.HALF_OPEN
-                    state_data["last_updated"] = int(time.time())
-                    state_data["instance_id"] = self.instance_id
-                    await self.storage.set_state(
-                        f"{self.name}:state",
-                        state_data,
-                        ttl=self.config.state_ttl
-                    )
-            finally:
-                await self.storage.release_lock(
-                    f"{self.name}:transition_lock",
-                    self.instance_id
-                )
-    
-    async def _record_success(self) -> None:
-        """Record a successful execution."""
-        lock_acquired = await self.storage.acquire_lock(
-            f"{self.name}:state_lock",
-            self.instance_id,
-            self.config.sync_interval
-        )
-        
-        if lock_acquired:
-            try:
-                state_data = await self.storage.get_state(f"{self.name}:state")
-                current_time = int(time.time())
-                state_data["last_success"] = current_time
-                state_data["success_count"] += 1
-                state_data["last_updated"] = current_time
-                state_data["instance_id"] = self.instance_id
+            if not circuit.can_execute():
+                if fallback:
+                    return await fallback(*args, **kwargs)
+                raise CircuitOpenError(f"Circuit {circuit_name} is open")
                 
-                if state_data["state"] in [CircuitBreakerState.HALF_OPEN, CircuitBreakerState.OPEN]:
-                    state_data["state"] = CircuitBreakerState.CLOSED
-                    state_data["failures"] = 0
-                    state_data["corruption_count"] = 0
-                    state_data["model_error_count"] = 0
-                
-                await self.storage.set_state(
-                    f"{self.name}:state",
-                    state_data,
-                    ttl=self.config.state_ttl
-                )
-            finally:
-                await self.storage.release_lock(
-                    f"{self.name}:state_lock",
-                    self.instance_id
-                )
-    
-    async def _record_failure(self, error_type: Optional[str] = None) -> None:
-        """Record a failed execution with optional error type."""
-        lock_acquired = await self.storage.acquire_lock(
-            f"{self.name}:state_lock",
-            self.instance_id,
-            self.config.sync_interval
-        )
-        
-        if lock_acquired:
-            try:
-                state_data = await self.storage.get_state(f"{self.name}:state")
-                current_time = int(time.time())
-                state_data["last_failure"] = current_time
-                state_data["last_updated"] = current_time
-                state_data["instance_id"] = self.instance_id
-                
-                # Update specific error counters
-                if error_type == "corruption":
-                    state_data["corruption_count"] += 1
-                elif error_type == "model_error":
-                    state_data["model_error_count"] += 1
-                else:
-                    state_data["failures"] += 1
-                
-                # Check thresholds
-                should_open = False
-                if (
-                    state_data["state"] == CircuitBreakerState.CLOSED
-                    and (
-                        state_data["failures"] >= self.config.failure_threshold
-                        or (self.config.corruption_threshold and state_data["corruption_count"] >= self.config.corruption_threshold)
-                        or (self.config.model_error_threshold and state_data["model_error_count"] >= self.config.model_error_threshold)
-                    )
-                ):
-                    should_open = True
-                elif state_data["state"] == CircuitBreakerState.HALF_OPEN:
-                    should_open = True
-                
-                if should_open:
-                    state_data["state"] = CircuitBreakerState.OPEN
-                
-                await self.storage.set_state(
-                    f"{self.name}:state",
-                    state_data,
-                    ttl=self.config.state_ttl
-                )
-            finally:
-                await self.storage.release_lock(
-                    f"{self.name}:state_lock",
-                    self.instance_id
-                )
-    
-    def __call__(self, func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T]]:
-        """Decorator for protecting async functions with the circuit breaker."""
-        @wraps(func)
-        async def wrapper(*args: Any, **kwargs: Any) -> T:
-            state_data = await self.storage.get_state(f"{self.name}:state")
-            current_state = state_data["state"]
-            
-            if current_state == CircuitBreakerState.OPEN:
-                raise CircuitBreakerError(
-                    f"Circuit is OPEN (failures={state_data['failures']}, "
-                    f"corruption={state_data['corruption_count']}, "
-                    f"model_errors={state_data['model_error_count']})"
-                )
-            
             try:
                 result = await func(*args, **kwargs)
-                await self._record_success()
+                circuit.record_success()
                 return result
             except Exception as e:
-                error_type = None
-                if "corruption" in str(e).lower():
-                    error_type = "corruption"
-                elif "model" in str(e).lower():
-                    error_type = "model_error"
-                
-                await self._record_failure(error_type)
-                raise CircuitBreakerError(f"Operation failed: {str(e)}") from e
-        
-        return wrapper
+                circuit.record_failure()
+                raise
 
-async def create_circuit_breaker_with_storage(
-    name: str,
-    storage_type: str,
-    storage_config: Dict[str, Any],
-    circuit_config: CircuitBreakerConfig
-) -> DistributedCircuitBreaker:
-    """Factory function to create a circuit breaker with the specified storage backend."""
-    storage_backends = {
-        "redis": RedisStorageBackend,
-        "etcd": EtcdStorageBackend,
-        "consul": ConsulStorageBackend,
-        "zookeeper": ZooKeeperStorageBackend,
-        "dynamodb": DynamoDBStorageBackend,
-        "s3": S3StorageBackend,
-        "elasticache": ElastiCacheStorageBackend
-    }
-    
-    if storage_type not in storage_backends:
-        raise ValueError(f"Unsupported storage type: {storage_type}")
-    
-    storage = storage_backends[storage_type](storage_config)
-    circuit = DistributedCircuitBreaker(name, storage, circuit_config)
-    await circuit.start()
-    return circuit 
+        def sync_wrapper(*args, **kwargs):
+            circuit = registry.get_circuit(circuit_name, config)
+            
+            if not circuit.can_execute():
+                if fallback:
+                    return fallback(*args, **kwargs)
+                raise CircuitOpenError(f"Circuit {circuit_name} is open")
+                
+            try:
+                result = func(*args, **kwargs)
+                circuit.record_success()
+                return result
+            except Exception as e:
+                circuit.record_failure()
+                raise
+
+        return async_wrapper if asyncio.iscoroutinefunction(func) else sync_wrapper
+    return decorator
+
+class CircuitOpenError(Exception):
+    """Raised when circuit is open"""
+    pass 
