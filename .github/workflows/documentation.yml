@@ -15,19 +15,40 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.8'
+        
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
         
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install -r requirements.txt
         pip install -r requirements-dev.txt
         pip install pdoc3
+        
+    - name: Create dummy environment
+      run: |
+        echo "# Documentation environment variables" > .env
+        echo "DEBUG=False" >> .env
+        echo "ENVIRONMENT=docs" >> .env
         
     - name: Check docstrings
       run: python scripts/check_docstrings.py
         
     - name: Generate documentation
-      run: pdoc --html --output-dir docs/ src/
+      run: |
+        mkdir -p docs
+        pdoc --html --output-dir docs/ src/
+        
+    - name: Cleanup sensitive information
+      run: |
+        find docs/ -type f -name "*.html" -exec sed -i 's/\(password\|secret\|key\|token\)=[^&]*&/\1=REDACTED\&/g' {} +
 
     - name: Deploy documentation
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -35,3 +56,9 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        rm -f .env
+        rm -rf docs/
