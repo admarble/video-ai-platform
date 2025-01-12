@@ -1,0 +1,3 @@
+mkdir -p docs/core
+pip install mkdocs-material
+mkdocs serve 

@@ -1,0 +1,45 @@
+{
+    "mode": "secure",
+    "security_defaults": {
+        "require_https": true,
+        "hsts_enabled": true,
+        "frame_options": "DENY",
+        "content_security_policy": {
+            "default-src": ["'self'"],
+            "script-src": ["'self'", "'unsafe-inline'"],
+            "style-src": ["'self'", "'unsafe-inline'"],
+            "img-src": ["'self'", "data:", "https:"],
+            "connect-src": ["'self'", "https://api.example.com"]
+        }
+    },
+    "rules": {
+        "secure_api": {
+            "allowed_origins": ["https://app.example.com"],
+            "allowed_methods": ["GET", "POST"],
+            "allowed_headers": ["Content-Type", "Authorization"],
+            "expose_headers": ["Content-Length"],
+            "max_age": 3600,
+            "allow_credentials": true,
+            "security_level": "high",
+            "require_auth": true,
+            "allowed_roles": ["admin", "api_user"],
+            "rate_limit": {
+                "requests_per_minute": 60
+            },
+            "trusted_proxies": ["10.0.0.0/8"]
+        },
+        "public_api": {
+            "allowed_origins": ["*"],
+            "allowed_methods": ["GET"],
+            "allowed_headers": ["Content-Type"],
+            "expose_headers": [],
+            "max_age": 3600,
+            "allow_credentials": false,
+            "security_level": "medium",
+            "require_auth": false,
+            "rate_limit": {
+                "requests_per_minute": 30
+            }
+        }
+    }
+} 
