@@ -28,6 +28,5 @@ wheels/
 # Large files
 *.dylib
 
-# Instructions directory (excluding development guide)
-instructions/*
-!instructions/development_guide.md
+# Instructions directory
+instructions/
