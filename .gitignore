@@ -28,9 +28,6 @@ wheels/
 # Large files
 *.dylib
 
-# Instructions directory
-instructions/
-
 # IDE and Editor files
 .vscode/
 .idea/
@@ -58,3 +55,7 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Remove instructions from gitignore
+!instructions/
+!instructions/**
