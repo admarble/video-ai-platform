@@ -59,7 +59,7 @@ jobs:
         find docs/ -type f -name "*.html" -exec sed -i 's/\(password\|secret\|key\|token\)=[^&]*&/\1=REDACTED\&/g' {} +
 
     - name: Setup Pages
-      uses: actions/configure-pages@v3
+      uses: actions/configure-pages@v5
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v2
