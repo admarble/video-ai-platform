@@ -16,8 +16,16 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
+    # Security updates should be prioritized
+    security-updates-only: false
+    versioning-strategy: "lockfile-only"
     # Group updates together
     groups:
+      security:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
       # Group patch & minor updates together
       minor-patches:
         patterns:
@@ -37,6 +45,12 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "torchvision"
         update-types: ["version-update:semver-major"]
+    # Require review from security team
+    reviewers:
+      - "admarble"
+    # Assign to maintainers
+    assignees:
+      - "admarble"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
@@ -49,6 +63,28 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+      - "security"
     commit-message:
       prefix: "ci"
-      include: "scope" 
+      include: "scope"
+    # Security updates should be prioritized
+    security-updates-only: false
+    # Group updates together
+    groups:
+      security:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Require review from maintainers
+    reviewers:
+      - "admarble"
+    # Assign to maintainers
+    assignees:
+      - "admarble" 
