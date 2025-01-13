@@ -8,6 +8,64 @@
 - Access to the Cuthrough repository
 - GPG key for signed commits
 
+### Setting Up GPG Signing
+
+1. Install GPG:
+```bash
+# macOS
+brew install gnupg
+
+# Ubuntu/Debian
+sudo apt-get install gnupg
+
+# Windows
+# Download from https://www.gnupg.org/download/
+```
+
+2. Generate a GPG key:
+```bash
+gpg --full-generate-key
+# Choose:
+# - RSA and RSA
+# - 4096 bits
+# - Key valid for 2 years (or your preference)
+# - Your GitHub email address
+```
+
+3. Get your GPG key ID:
+```bash
+gpg --list-secret-keys --keyid-format=long
+# Look for sec rsa4096/THIS_IS_YOUR_KEY_ID
+```
+
+4. Export your public key:
+```bash
+gpg --armor --export YOUR_KEY_ID
+# Copy the entire output including BEGIN and END lines
+```
+
+5. Add to GitHub:
+   - Go to GitHub Settings
+   - Click "SSH and GPG keys"
+   - Click "New GPG key"
+   - Paste your public key
+
+6. Configure Git to use GPG:
+```bash
+# Configure GPG key
+git config --global user.signingkey YOUR_KEY_ID
+# Enable automatic signing
+git config --global commit.gpgsign true
+
+# For macOS, add to ~/.zshrc or ~/.bash_profile:
+export GPG_TTY=$(tty)
+```
+
+7. Test your setup:
+```bash
+git commit -S -m "test: verify GPG signing"
+```
+
 ### Setting Up Your Development Environment
 
 1. Clone the repository:
