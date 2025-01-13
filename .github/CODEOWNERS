@@ -1,0 +1,22 @@
+# Default owners for everything in the repo
+* @admarble
+
+# Security-sensitive files
+/.github/workflows/security.yml @admarble
+/requirements.txt @admarble
+/.env.example @admarble
+
+# Documentation
+/docs/ @admarble
+*.md @admarble
+
+# Core application code
+/src/ @admarble
+
+# Tests
+/tests/ @admarble
+
+# CI/CD configuration
+/.github/workflows/ @admarble
+/.github/dependabot.yml @admarble
+/.github/branch-protection.yml @admarble 

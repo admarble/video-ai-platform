@@ -1,0 +1,38 @@
+branches:
+  - name: main
+    protection:
+      # Require pull request reviews before merging
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        require_last_push_approval: true
+        dismissal_restrictions:
+          users: ["admarble"]
+
+      # Require status checks to pass before merging
+      required_status_checks:
+        strict: true
+        contexts:
+          - "test (3.8)"
+          - "lint"
+          - "security"
+          - "docs"
+
+      # Require conversation resolution before merging
+      required_conversation_resolution: true
+
+      # Require signed commits
+      required_signatures: true
+
+      # Include administrators in restrictions
+      enforce_admins: true
+
+      # Restrict who can push to the branch
+      restrictions:
+        users: ["admarble"]
+        apps: ["dependabot"]
+
+      # Allow specific apps (like Dependabot) to bypass restrictions
+      allow_force_pushes: false
+      allow_deletions: false 
